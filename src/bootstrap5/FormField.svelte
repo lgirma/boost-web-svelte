@@ -1,5 +1,6 @@
 <script>
     import {Input, Label, FormGroup, FormText} from 'sveltestrap'
+    import {Rating} from '..'
 
     let _form = globalThis.c('form')
     let _i18n = globalThis.c('i18n')
@@ -22,6 +23,14 @@
         if (val !== key) return val
         return obj[prop]
     }
+
+    function onToggleMultiSelect(e, val) {
+        let on = e.target.checked;
+        if (on)
+            value = [...value, val]
+        else
+            value = value.filter(i => i !== val)
+    }
 </script>
 
 <FormGroup>
@@ -31,16 +40,43 @@
     {#if config.readonly}
         {#if config.type === 'checkbox'}
             {value ? _i18n._('YES') : _i18n._('NO')}
+        {:else if config.type === 'rating'}
+            {#each new Array(config.max || 5).fill(0) as i}
+                <span class="boost-star">{value > i ? '★' : '☆'}</span>
+            {/each}
         {:else}
-            {value}
+            <Input plaintext {value} />
         {/if}
     {:else if config.type === 'checkbox'}
         <Input bind:checked={value}
-               id={config.id} type={config.type} invalid={validationResult.hasError}
+               id={config.id} type="checkbox" invalid={validationResult.hasError}
                feedback={_i18n._(validationResult.message)}
                label={try_i18nText(config, 'label')}
                required={config.required}
                name={config.name || undefined} />
+    {:else if config.type === 'radio'}
+        {#each Object.keys(config.choices || {}) as key}
+            {#if config.multiple}
+                <Input
+                       on:change={e => onToggleMultiSelect(e, key)}
+                       checked={value.indexOf(key) > -1}
+                       id="{config.id}_{key}" type="checkbox" invalid={validationResult.hasError}
+                       feedback={_i18n._(validationResult.message)}
+                       label={_i18n._(config.choices[key])}
+                       name={config.name || undefined} />
+            {:else}
+                <Input value={key}
+                       id="{config.id}_{key}" type="radio" invalid={validationResult.hasError}
+                       bind:group={value}
+                       feedback={_i18n._(validationResult.message)}
+                       label={try_i18nText(config, 'label')}
+                       name={config.name || undefined} />
+            {/if}
+        {/each}
+    {:else if config.type === 'rating'}
+        <div>
+            <Rating max={config.max || 5} bind:value />
+        </div>
     {:else}
         <Input bind:value
                id={config.id} type={config.type} invalid={validationResult.hasError}
@@ -54,7 +90,13 @@
                pattern={config.pattern || undefined}
                rows={config.rows || undefined}
                step={config.step || undefined}
-        />
+        >
+            {#if config.type === 'select'}
+                {#each Object.keys(config.choices || {}) as key}
+                    <option value={key}>{try_i18nText(config.choices, key)}</option>
+                {/each}
+            {/if}
+        </Input>
     {/if}
 
     <FormText color="muted">{try_i18nText(config, 'helpText')}</FormText>

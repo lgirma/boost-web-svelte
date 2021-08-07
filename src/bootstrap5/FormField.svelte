@@ -1,6 +1,7 @@
 <script>
     import {Input, Label, FormGroup, FormText} from 'sveltestrap'
     import {Rating} from '..'
+    import {fly} from 'svelte/transition'
 
     let _form = globalThis.c('form')
     let _i18n = globalThis.c('i18n')
@@ -32,6 +33,12 @@
             value = value.filter(i => i !== val)
     }
 </script>
+
+<style>
+    form .accordion-header button {
+
+    }
+</style>
 
 <FormGroup>
     {#if config.type !== 'checkbox' && !config.hideLabel}

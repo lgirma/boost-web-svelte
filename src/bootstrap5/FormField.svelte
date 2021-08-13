@@ -34,14 +34,8 @@
     }
 </script>
 
-<style>
-    form .accordion-header button {
-
-    }
-</style>
-
 <FormGroup>
-    {#if config.type !== 'checkbox' && !config.hideLabel && !config.hidden}
+    {#if config.type !== 'checkbox' && !config.hideLabel}
         <Label for={config.id}>
             {try_i18nText(config, 'label')}
             {#if config.required}<span style="color: red">*</span>{/if}

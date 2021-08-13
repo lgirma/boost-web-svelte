@@ -36,8 +36,13 @@
             dispatcher('submit', e)
     }
 
+    $: fieldsConfig = Object.keys(config.fieldsConfig).reduce((prev, fieldId) => {
+        if (!config.fieldsConfig[fieldId].hidden)
+            return {...prev, [fieldId]: config.fieldsConfig[fieldId]}
+        return prev
+    }, {})
     $: hasGroups = _form.hasGroups(config)
-    $: groupedFields = _form.getGroupedFields(config.fieldsConfig)
+    $: groupedFields = _form.getGroupedFields(fieldsConfig)
 
     onMount(() => {
         fixAccordions()
@@ -75,14 +80,14 @@
             {/each}
         </Accordion>
     {:else}
-        {#each new Array(Math.ceil(Object.keys(config.fieldsConfig).length / config.columns)).fill(0) as _, row}
+        {#each new Array(Math.ceil(Object.keys(fieldsConfig).length / config.columns)).fill(0) as _, row}
             <Row>
                 {#each new Array(config.columns).fill(0) as _2, col}
-                    {#if Object.keys(config.fieldsConfig).length > (row*config.columns)+col}
+                    {#if Object.keys(fieldsConfig).length > (row*config.columns)+col}
                         <Col>
-                            <FormField config={getField(config.fieldsConfig, row, col, config.columns)}
-                                       bind:value={forObj[getFieldId(config.fieldsConfig, row, col, config.columns)]}
-                                       validationResult={validationResult.fields[getFieldId(config.fieldsConfig, row, col, config.columns)] || _form.getValidationResult()} />
+                            <FormField config={getField(fieldsConfig, row, col, config.columns)}
+                                       bind:value={forObj[getFieldId(fieldsConfig, row, col, config.columns)]}
+                                       validationResult={validationResult.fields[getFieldId(fieldsConfig, row, col, config.columns)] || _form.getValidationResult()} />
                         </Col>
                     {:else}
                         <Col/>

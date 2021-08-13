@@ -10,7 +10,8 @@
 
 <div class="position-fixed top-0 left-0 p-3"
      role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 11">
-    <Toast class="text-white bg-{BgColorTable[$ToastStore.type]}" isOpen={$ToastStore.isOpen} autohide={$ToastStore.autoHide}>
+    <Toast class="text-white bg-{BgColorTable[$ToastStore.type]}" isOpen={$ToastStore.isOpen}
+           autohide={$ToastStore.autoHide} delay={$ToastStore.timeout}>
         <div class="d-flex">
             <ToastBody>
                 <h4><FaIcon messageType={$ToastStore.type} /> {_i18n._($ToastStore.titleKey)}</h4>

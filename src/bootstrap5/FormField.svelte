@@ -41,8 +41,11 @@
 </style>
 
 <FormGroup>
-    {#if config.type !== 'checkbox' && !config.hideLabel}
-        <Label for={config.id}>{try_i18nText(config, 'label')}</Label>
+    {#if config.type !== 'checkbox' && !config.hideLabel && !config.hidden}
+        <Label for={config.id}>
+            {try_i18nText(config, 'label')}
+            {#if config.required}<span style="color: red">*</span>{/if}
+        </Label>
     {/if}
     {#if config.readonly}
         {#if config.type === 'checkbox'}
@@ -60,6 +63,7 @@
                feedback={_i18n._(validationResult.message)}
                label={try_i18nText(config, 'label')}
                required={config.required}
+               hidden={config.hidden}
                name={config.name || undefined} />
     {:else if config.type === 'radio'}
         {#each Object.keys(config.choices || {}) as key}
@@ -70,6 +74,7 @@
                        id="{config.id}_{key}" type="checkbox" invalid={validationResult.hasError}
                        feedback={_i18n._(validationResult.message)}
                        label={_i18n._(config.choices[key])}
+                       hidden={config.hidden}
                        name={config.name || undefined} />
             {:else}
                 <Input value={key}
@@ -77,6 +82,7 @@
                        bind:group={value}
                        feedback={_i18n._(validationResult.message)}
                        label={try_i18nText(config, 'label')}
+                       hidden={config.hidden}
                        name={config.name || undefined} />
             {/if}
         {/each}
@@ -97,6 +103,8 @@
                pattern={config.pattern || undefined}
                rows={config.rows || undefined}
                step={config.step || undefined}
+               multiple={config.multiple || undefined}
+               hidden={config.hidden}
         >
             {#if config.type === 'select'}
                 {#each Object.keys(config.choices || {}) as key}

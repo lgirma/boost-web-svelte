@@ -42,6 +42,13 @@
     onMount(() => {
         fixAccordions()
     })
+
+    function getField(fields, row, col, cols) {
+        return fields[Object.keys(fields)[(row*cols)+col]]
+    }
+    function getFieldId(fields, row, col, cols) {
+        return Object.keys(fields)[(row*cols)+col]
+    }
 </script>
 
 <Form on:submit={onSubmit} novalidate={config.autoValidate ? 'novalidate' : undefined}>
@@ -49,30 +56,40 @@
         <Accordion stayOpen>
             {#each Object.entries(groupedFields) as [grpKey, fieldGroup]}
                 <AccordionItem active header={_i18n._(grpKey)}>
-                    <Row>
-                    {#each _form.getColumns(fieldGroup, config.columns) as fields}
-                        <Col>
-                            {#each Object.entries(fields) as [fieldId, fieldConfig]}
-                                <FormField config={fieldConfig} bind:value={forObj[fieldId]}
-                                           validationResult={validationResult.fields[fieldId] || _form.getValidationResult()} />
+                    {#each new Array(Math.ceil(Object.keys(fieldGroup).length / config.columns)).fill(0) as _, row}
+                        <Row>
+                            {#each new Array(config.columns).fill(0) as _2, col}
+                                {#if Object.keys(fieldGroup).length > (row*config.columns)+col}
+                                    <Col>
+                                        <FormField config={getField(fieldGroup, row, col, config.columns)}
+                                                   bind:value={forObj[getFieldId(fieldGroup, row, col, config.columns)]}
+                                                   validationResult={validationResult.fields[getFieldId(fieldGroup, row, col, config.columns)] || _form.getValidationResult()} />
+                                    </Col>
+                                {:else}
+                                    <Col/>
+                                {/if}
                             {/each}
-                        </Col>
+                        </Row>
                     {/each}
-                    </Row>
                 </AccordionItem>
             {/each}
         </Accordion>
     {:else}
-        <Row>
-        {#each _form.getColumns(config.fieldsConfig, config.columns) as fields}
-            <Col>
-                {#each Object.entries(fields) as [fieldId, fieldConfig]}
-                    <FormField config={fieldConfig} bind:value={forObj[fieldId]}
-                               validationResult={validationResult.fields[fieldId] || _form.getValidationResult()} />
+        {#each new Array(Math.ceil(Object.keys(config.fieldsConfig).length / config.columns)).fill(0) as _, row}
+            <Row>
+                {#each new Array(config.columns).fill(0) as _2, col}
+                    {#if Object.keys(config.fieldsConfig).length > (row*config.columns)+col}
+                        <Col>
+                            <FormField config={getField(config.fieldsConfig, row, col, config.columns)}
+                                       bind:value={forObj[getFieldId(config.fieldsConfig, row, col, config.columns)]}
+                                       validationResult={validationResult.fields[getFieldId(config.fieldsConfig, row, col, config.columns)] || _form.getValidationResult()} />
+                        </Col>
+                    {:else}
+                        <Col/>
+                    {/if}
                 {/each}
-            </Col>
+            </Row>
         {/each}
-        </Row>
     {/if}
     <slot></slot>
 </Form>

@@ -23,10 +23,6 @@
             : _form.createFormConfig(updateConfigOnValueChange ? forObj : originalVal, fromConfig)
     }
 
-    function fixAccordions() {
-        [...document.querySelectorAll('.accordion-button')].map(e => e.type = 'button')
-    }
-
     function onSubmit(e) {
         e.preventDefault()
         if (config.autoValidate) {
@@ -43,10 +39,6 @@
     }, {})
     $: hasGroups = _form.hasGroups(config)
     $: groupedFields = _form.getGroupedFields(fieldsConfig)
-
-    onMount(() => {
-        fixAccordions()
-    })
 
     function getField(fields, row, col, cols) {
         return fields[Object.keys(fields)[(row*cols)+col]]

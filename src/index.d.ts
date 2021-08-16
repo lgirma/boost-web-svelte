@@ -1,8 +1,15 @@
 import { SvelteComponentTyped } from "svelte"
-import type {Size, MessageType, Dict, FieldConfig, ValidationResult} from 'boost-web'
+import type {
+    Size,
+    MessageType,
+    Dict,
+    FieldConfig,
+    ValidationResult,
+    i18nTranslations,
+    DataTableDataSource, DataTableColumn, DataTableFilter, DataTableOptionsFrom
+} from 'boost-web'
 import {FormValidationResult, PartialFormConfig} from "boost-web";
-import {updateConfigOnValueChange} from "./bootstrap5/Form.svelte";
-import {classes, max, style} from "./misc/Rating.svelte";
+import {columns, filter, selectableRows} from "./bootstrap5/DataTable.svelte";
 
 export interface BS5ModalProps {
     id: string
@@ -51,3 +58,8 @@ export interface RatingProps {
     style?: string
 }
 export class Rating extends SvelteComponentTyped<RatingProps, {}> {}
+
+export declare const i18n_res_en: i18nTranslations
+export declare const i18n_res_am: i18nTranslations
+
+export class BS5DataTable extends SvelteComponentTyped<DataTableOptionsFrom, {}> {}

@@ -8,7 +8,7 @@
     const toggle = () => ToastStore.update(ts => ({...ts, isOpen: !ts.isOpen}))
 </script>
 
-<div class="position-fixed top-0 left-0 p-3"
+<div class="position-fixed top-0 end-0 p-3"
      role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 11">
     <Toast class="text-white bg-{BgColorTable[$ToastStore.type]}" isOpen={$ToastStore.isOpen}
            autohide={$ToastStore.autoHide} delay={$ToastStore.timeout}>

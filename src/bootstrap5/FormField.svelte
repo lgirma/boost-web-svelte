@@ -37,7 +37,7 @@
 <FormGroup>
     {#if config.type !== 'checkbox' && !config.hideLabel}
         <Label for={config.id}>
-            {try_i18nText(config, 'label')}
+            {config.label}
             {#if config.required}<span style="color: red">*</span>{/if}
         </Label>
     {/if}
@@ -55,27 +55,27 @@
         <Input bind:checked={value}
                id={config.id} type="checkbox" invalid={validationResult.hasError}
                feedback={_i18n._(validationResult.message)}
-               label={try_i18nText(config, 'label')}
+               label={config.label}
                required={config.required}
                hidden={config.hidden}
                name={config.name || undefined} />
     {:else if config.type === 'radio'}
-        {#each Object.keys(config.choices || {}) as key}
+        {#each config.choices as choice}
             {#if config.multiple}
                 <Input
-                       on:change={e => onToggleMultiSelect(e, key)}
-                       checked={value.indexOf(key) > -1}
-                       id="{config.id}_{key}" type="checkbox" invalid={validationResult.hasError}
+                       on:change={e => onToggleMultiSelect(e, choice.value)}
+                       checked={value.indexOf(choice.value) > -1}
+                       id="{config.id}_{choice.value}" type="checkbox" invalid={validationResult.hasError}
                        feedback={_i18n._(validationResult.message)}
-                       label={_i18n._(config.choices[key])}
+                       label={_i18n._(choice.label)}
                        hidden={config.hidden}
                        name={config.name || undefined} />
             {:else}
-                <Input value={key}
-                       id="{config.id}_{key}" type="radio" invalid={validationResult.hasError}
+                <Input value={choice.value}
+                       id="{config.id}_{choice.value}" type="radio" invalid={validationResult.hasError}
                        bind:group={value}
                        feedback={_i18n._(validationResult.message)}
-                       label={try_i18nText(config, 'label')}
+                       label={config.label}
                        hidden={config.hidden}
                        name={config.name || undefined} />
             {/if}
@@ -101,8 +101,8 @@
                hidden={config.hidden}
         >
             {#if config.type === 'select'}
-                {#each Object.keys(config.choices || {}) as key}
-                    <option value={key}>{try_i18nText(config.choices, key)}</option>
+                {#each config.choices as choice}
+                    <option value={choice.value}>{choice.label}</option>
                 {/each}
             {/if}
         </Input>

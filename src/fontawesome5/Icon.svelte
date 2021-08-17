@@ -5,6 +5,8 @@
     export let key = ''
     export let spin = false
     export let type = 'solid'
+    let className = ''
+    export {className as class}
 
     const SolidMsgIcons = {
         [MessageType.NONE]: 'fas fa-info-circle',
@@ -25,7 +27,7 @@
 </script>
 
 {#if messageType != null}
-    <i class="{(type === 'solid' ? SolidMsgIcons : RegularMsgIcons)[messageType]}" class:fa-spin={spin}></i>
+    <i class="{(type === 'solid' ? SolidMsgIcons : RegularMsgIcons)[messageType]} {className}" class:fa-spin={spin}></i>
 {:else}
-    <i class="fa{{solid: 's', regular: 'r', brand: 'b'}[type]} fa-{key}" class:fa-spin={spin}></i>
+    <i class="fa{{solid: 's', regular: 'r', brand: 'b'}[type]} fa-{key} {className}" class:fa-spin={spin}></i>
 {/if}

@@ -8,5 +8,6 @@ export default {
   EMPTY: 'ባዶ',
   EMPTY_TABLE: 'ገና ምንም አልተጨመረም',
   CREATE_NEW: 'አዲስ ጨርምር',
-  RETRY: 'እንደገና ሞክር'
+  RETRY: 'እንደገና ሞክር',
+  TOTAL: 'ጠቅላላ'
 }

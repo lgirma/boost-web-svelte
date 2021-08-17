@@ -1,4 +1,5 @@
 <script>
+    import FaIcon from '../fontawesome5/Icon.svelte'
     export let config
     export let value
     export let row
@@ -10,6 +11,8 @@
 {:else}
     {#if config.type === 'tel'}
         <a href="tel:{value}">{value}</a>
+    {:else if config.type === 'checkbox'}
+        {#if value}<FaIcon key="check" />{/if}
     {:else}
         {value}
     {/if}

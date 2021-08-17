@@ -8,5 +8,6 @@ export default {
   EMPTY: 'Empty',
   EMPTY_TABLE: 'No items added yet',
   CREATE_NEW: 'Create New',
-  RETRY: 'Retry'
+  RETRY: 'Retry',
+  TOTAL: 'Total'
 }

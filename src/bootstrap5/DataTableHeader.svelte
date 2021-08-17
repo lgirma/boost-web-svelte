@@ -30,10 +30,11 @@
     }
 </style>
 
-<th class="header bg-light" style="{column.sortable ? 'cursor: pointer' : ''}" on:click={onClick}>
+<th class="header" style="{column.sortable ? 'cursor: pointer' : ''}"
+    on:click={onClick} class:fw-bold={!!sort} class:bg-light={sort == null}>
     {column.header}
     {#if column.sortable}
-        <span class="float-end">
+        <span class="float-end text-black-50">
             {#if sort == null}
                 <FaIcon key="sort" />
             {:else if sort.desc}

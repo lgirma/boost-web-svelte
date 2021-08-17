@@ -145,7 +145,7 @@
                     </Button>
                 </ButtonGroup>
                 <span class="float-end text-muted">
-                    {(data && data.totalCount) || 0} Total
+                    {(data && data.totalCount) || 0} {_i18n._('TOTAL')}
                 </span>
             </td>
         </tr>

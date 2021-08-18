@@ -1,10 +1,16 @@
 {
-  "name": "boost-web-universe-svelte",
+  "name": "boost-web-svelte",
   "description": "Svelte components for boost-web library",
   "version": "0.1.0",
   "type": "module",
   "types": "src/index.d.ts",
   "svelte": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lgirma/boost-web-svelte.git"
+  },
+  "author": "Leone",
+  "homepage": "https://github.com/lgirma/boost-web-svelte#readme",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

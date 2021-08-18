@@ -63,19 +63,19 @@
         {#each config.choices as choice}
             {#if config.multiple}
                 <Input
-                       on:change={e => onToggleMultiSelect(e, choice.value)}
-                       checked={value.indexOf(choice.value) > -1}
-                       id="{config.id}_{choice.value}" type="checkbox" invalid={validationResult.hasError}
+                       on:change={e => onToggleMultiSelect(e, choice.key)}
+                       checked={value.indexOf(choice.key) > -1}
+                       id="{config.id}_{choice.key}" type="checkbox" invalid={validationResult.hasError}
                        feedback={_i18n._(validationResult.message)}
-                       label={_i18n._(choice.label)}
+                       label={choice.val}
                        hidden={config.hidden}
                        name={config.name || undefined} />
             {:else}
-                <Input value={choice.value}
-                       id="{config.id}_{choice.value}" type="radio" invalid={validationResult.hasError}
+                <Input value={choice.key}
+                       id="{config.id}_{choice.key}" type="radio" invalid={validationResult.hasError}
                        bind:group={value}
                        feedback={_i18n._(validationResult.message)}
-                       label={config.label}
+                       label={choice.val}
                        hidden={config.hidden}
                        name={config.name || undefined} />
             {/if}
@@ -102,7 +102,7 @@
         >
             {#if config.type === 'select'}
                 {#each config.choices as choice}
-                    <option value={choice.value}>{choice.label}</option>
+                    <option value={choice.key}>{choice.val}</option>
                 {/each}
             {/if}
         </Input>

@@ -21,12 +21,13 @@
                 columns: cols,
                 selectableRows: selectableRows
             })
+            columnList = Object.keys(config.columns)
+                .map(c => config.columns[c])
+                .filter(c => !c.hidden)
         } catch (e) {
             error = e
+            console.error(e)
         }
-        columnList = Object.keys(config.columns)
-            .map(c => config.columns[c])
-            .filter(c => !c.hidden)
     }
 
     async function fetchData(cnfg, fltr) {

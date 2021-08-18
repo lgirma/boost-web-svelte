@@ -1,5 +1,5 @@
 <script>
-    import {Table, Input, ButtonGroup, Button} from 'sveltestrap'
+    import {Table, Input, ButtonGroup, Button, Accordion, AccordionItem} from 'sveltestrap'
     import DataTableCell from "./DataTableCell.svelte";
     import FaIcon from '../fontawesome5/Icon.svelte'
     import DataTableHeader from "./DataTableHeader.svelte";
@@ -65,7 +65,7 @@
 </style>
 
 
-<Table bordered>
+<Table bordered responsive>
     <thead class="shadow-sm" style="border-bottom: 1px solid grey">
         <tr>
             {#if selectableRows}

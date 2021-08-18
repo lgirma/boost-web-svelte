@@ -9,5 +9,11 @@ export default {
   EMPTY_TABLE: 'ገና ምንም አልተጨመረም',
   CREATE_NEW: 'አዲስ ጨርምር',
   RETRY: 'እንደገና ሞክር',
-  TOTAL: 'ጠቅላላ'
+  TOTAL: 'ጠቅላላ',
+  LIST: 'ዝርዝር',
+  NEW: 'አዲስ',
+  EDIT: 'ማስተካከያ',
+  FILTER: 'ማጣርያ',
+  CREATE: 'አስገባ',
+  UPDATE: 'አስገባ'
 }

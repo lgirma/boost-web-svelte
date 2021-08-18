@@ -9,5 +9,11 @@ export default {
   EMPTY_TABLE: 'No items added yet',
   CREATE_NEW: 'Create New',
   RETRY: 'Retry',
-  TOTAL: 'Total'
+  TOTAL: 'Total',
+  LIST: 'List',
+  NEW: 'New',
+  EDIT: 'Edit',
+  FILTER: 'Filter',
+  CREATE: 'Create',
+  UPDATE: 'Update'
 }

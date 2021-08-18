@@ -9,7 +9,7 @@
 </script>
 
 <div class="position-fixed top-0 end-0 p-3"
-     role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 11">
+     role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 1040">
     <Toast class="text-white bg-{BgColorTable[$ToastStore.type]}" isOpen={$ToastStore.isOpen}
            autohide={$ToastStore.autoHide} delay={$ToastStore.timeout}>
         <div class="d-flex">

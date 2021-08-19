@@ -1,6 +1,6 @@
 <script>
     import FormField from './FormField.svelte'
-    import {Form, Row, Col, Accordion, AccordionHeader, AccordionItem} from 'sveltestrap'
+    import {Form, Row, Col, Card, CardBody, CardHeader, CardTitle} from 'sveltestrap'
     import {createEventDispatcher, onMount} from 'svelte'
 
     let dispatcher = createEventDispatcher()
@@ -50,9 +50,12 @@
 
 <Form on:submit={onSubmit} novalidate={config.autoValidate ? 'novalidate' : undefined}>
     {#if hasGroups}
-        <Accordion stayOpen>
+        <Card>
             {#each Object.entries(groupedFields) as [grpKey, fieldGroup]}
-                <AccordionItem active header={_i18n._(grpKey)}>
+                <CardHeader>
+                    <CardTitle>{_i18n._(grpKey)}</CardTitle>
+                </CardHeader>
+                <CardBody>
                     {#each new Array(Math.ceil(Object.keys(fieldGroup).length / config.columns)).fill(0) as _, row}
                         <Row>
                             {#each new Array(config.columns).fill(0) as _2, col}
@@ -68,9 +71,9 @@
                             {/each}
                         </Row>
                     {/each}
-                </AccordionItem>
+                </CardBody>
             {/each}
-        </Accordion>
+        </Card>
     {:else}
         {#each new Array(Math.ceil(Object.keys(fieldsConfig).length / config.columns)).fill(0) as _, row}
             <Row>

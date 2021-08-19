@@ -6,10 +6,20 @@ import type {
     FieldConfig,
     ValidationResult,
     i18nTranslations,
-    DataTableDataSource, DataTableColumn, DataTableFilter, DataTableOptionsFrom
+    DataTableDataSource, DataTableColumn, DataTableFilter, DataTableOptionsFrom, CrudOptionsFrom
 } from 'boost-web'
 import {FormValidationResult, PartialFormConfig} from "boost-web";
 import {columns, filter, selectableRows} from "./bootstrap5/DataTable.svelte";
+import {
+    createForm, createUrl,
+    dataTable,
+    detailUrl,
+    filterForm,
+    getFilter, name, namePlural, page, pageParams,
+    rootUrl,
+    updateForm,
+    updateUrl
+} from "./bootstrap5/Crud.svelte";
 
 export interface BS5ModalProps {
     id: string
@@ -63,3 +73,10 @@ export declare const i18n_res_en: i18nTranslations
 export declare const i18n_res_am: i18nTranslations
 
 export class BS5DataTable extends SvelteComponentTyped<DataTableOptionsFrom, {}> {}
+
+export type CrudProps = CrudOptionsFrom & {
+    page?: string
+    pageParams?: any
+}
+
+export class BS5Crud extends SvelteComponentTyped<CrudProps, {}> {}

@@ -38,7 +38,6 @@
     let updatedObj = {}
     let createdObj = {}
     let filterObj = {}
-    let detailRow
 
     async function goto(page, e) {
         if (e)
@@ -71,7 +70,7 @@
         try {
             await _http.post(_config.createUrl, createdObj)
             _toast.showSuccess('SUCCESS')
-            await goto(pages.LIST)
+            window.location.href = `#/${rootUrl}`
         } catch (e) {
             _apiError.handle(e, _ => {})
         }
@@ -81,7 +80,7 @@
         try {
             await _http.post(_config.updateUrl(pageParams), updatedObj)
             _toast.showSuccess('SUCCESS')
-            await goto(pages.LIST)
+            window.location.href = `#/${rootUrl}`
         } catch (e) {
             _apiError.handle(e, _ => {})
         }
@@ -143,7 +142,10 @@
         <svelte:fragment slot="content">
             <div in:fly={{x: 100}}>
                 <Form bind:forObj={updatedObj} formConfig={_config.updateForm} on:submit={onUpdate}>
-                    <Button color="light" class="btn-brand"><FaIcon key="check" /> {_i18n._('UPDATE')}</Button>
+                    <div class="mt-2">
+                        <Button color="light" class="btn-brand"><FaIcon key="check" /> {_i18n._('UPDATE')}</Button>
+                        <a class="btn btn-light" href="#/{rootUrl}">{_i18n._('CANCEL')}</a>
+                    </div>
                 </Form>
             </div>
         </svelte:fragment>
@@ -164,7 +166,10 @@
         <svelte:fragment slot="content">
             <div in:fly={{x: 100}}>
             <Form bind:forObj={createdObj} formConfig={_config.createForm} on:submit={onCreate}>
-                <Button color="light" class="btn-brand"><FaIcon key="check" /> {_i18n._('CREATE')}</Button>
+                <div class="mt-2">
+                    <Button color="light" class="btn-brand"><FaIcon key="check" /> {_i18n._('CREATE')}</Button>
+                    <a class="btn btn-light" href="#/{rootUrl}">{_i18n._('CANCEL')}</a>
+                </div>
             </Form>
             </div>
         </svelte:fragment>

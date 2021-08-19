@@ -15,7 +15,8 @@
 {#each _i18n.getLanguages() as lang}
     <span>
     {#if currentLang !== lang.key}
-        <a href="." style="text-decoration: none;" class={className} on:click={e => changeLang(e, lang.key)}>{lang.shortName}</a>&nbsp;
+        <a href="." style="text-decoration: none;" class={className}
+           on:click={e => changeLang(e, lang.key)} title={lang.displayName}>{lang.shortName}</a>&nbsp;
     {:else}
         <span class="badge bg-brand">{lang.shortName}</span>&nbsp;
     {/if}

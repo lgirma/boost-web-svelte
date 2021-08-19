@@ -13,6 +13,8 @@
         <a href="tel:{value}">{value}</a>
     {:else if config.type === 'checkbox'}
         {#if value}<FaIcon key="check" />{/if}
+    {:else if config.type === 'email'}
+        <a href="mailto:{value}">{value}</a>
     {:else}
         {value}
     {/if}

@@ -31,13 +31,14 @@
     export let page = 'list'
     export let pageParams = null
 
-    const pages = {NONE: 0, LIST: 1, CREATE: 2, EDIT: 3}
+    const pages = {NONE: 0, LIST: 1, CREATE: 2, DETAIL: 3, EDIT: 4}
 
     let _config = null
     let currentPage = pages.NONE
     let updatedObj = {}
     let createdObj = {}
     let filterObj = {}
+    let detailForm = {...updateForm, readonly: true}
 
     async function goto(page, e) {
         if (e)
@@ -50,6 +51,8 @@
         if (forPage === pages.CREATE) {
             createdObj = getNew()
         } else if (forPage === pages.EDIT) {
+            updatedObj = await _http.get(_config.detailUrl(pageParams))
+        } else if (forPage === pages.DETAIL) {
             updatedObj = await _http.get(_config.detailUrl(pageParams))
         } else {
             filterObj = {
@@ -95,6 +98,8 @@
             await goto(pages.LIST)
         else if (pageName === 'edit')
             await goto(pages.EDIT)
+        else if (pageName === 'detail')
+            await goto(pages.DETAIL)
         else if (pageName === 'new')
             await goto(pages.CREATE)
     }
@@ -148,6 +153,31 @@
                     </div>
                 </Form>
             </div>
+        </svelte:fragment>
+    </PageContent>
+{:else if currentPage === pages.DETAIL}
+    <PageContent>
+        <svelte:fragment slot="title">
+            <h4>{_config.name} <a href="#/{rootUrl}/edit/{pageParams}"><FaIcon key="pen" /> </a></h4>
+            <div>
+                <Breadcrumb>
+                    <BreadcrumbItem>
+                        <a href="#/{rootUrl}">{_config.namePlural}</a>
+                    </BreadcrumbItem>
+                    <BreadcrumbItem active>{_i18n._('DETAIL')}</BreadcrumbItem>
+                </Breadcrumb>
+            </div>
+        </svelte:fragment>
+        <svelte:fragment slot="content">
+            <div in:fly={{x: 100}}>
+                <Form forObj={updatedObj} formConfig={detailForm}>
+                    <div class="mt-2">
+                        <a class="btn btn-brand" href="#/{rootUrl}/edit/{pageParams}"><FaIcon key="pen" /> {_i18n._('EDIT')}</a>
+                        <a class="btn btn-light" href="#/{rootUrl}">{_i18n._('CANCEL')}</a>
+                    </div>
+                </Form>
+            </div>
+            <slot name="detail"></slot>
         </svelte:fragment>
     </PageContent>
 {:else if currentPage === pages.CREATE}

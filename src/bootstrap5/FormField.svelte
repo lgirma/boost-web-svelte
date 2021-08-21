@@ -1,7 +1,7 @@
 <script>
     import {Input, Label, FormGroup, FormText} from 'sveltestrap'
     import {Rating} from '..'
-    import {fly} from 'svelte/transition'
+    import FaIcon from '../fontawesome5/Icon.svelte'
 
     let _form = globalThis.c('form')
     let _i18n = globalThis.c('i18n')
@@ -32,25 +32,53 @@
         else
             value = value.filter(i => i !== val)
     }
+
+    let className
+
+    $: {
+        if (config.scale > 1) {
+            if (config.type === 'select')
+                className = 'form-select-lg'
+            else
+                className = 'form-control-lg'
+        } else if (config.scale < 1) {
+            if (config.type === 'select')
+                className = 'form-select-sm'
+            else
+                className = 'form-control-sm'
+        } else {
+            className = ''
+        }
+    }
 </script>
 
 <FormGroup>
     {#if config.type !== 'checkbox' && !config.hideLabel}
         <Label for={config.id}>
-            {config.label}
+            <span class:text-muted={config.readonly}>{config.label}</span>
             {#if config.required}<span style="color: red">*</span>{/if}
         </Label>
     {/if}
     {#if config.readonly}
+        <div class="fs-5" style="border-bottom: 1px solid #EEE;">
         {#if config.type === 'checkbox'}
             {value ? _i18n._('YES') : _i18n._('NO')}
         {:else if config.type === 'rating'}
             {#each new Array(config.max || 5).fill(0) as i}
                 <span class="boost-star">{value > i ? '★' : '☆'}</span>
             {/each}
+        {:else if config.type === 'select' && value != null}
+            {config.choices.find(c => c.key === value).val}
+        {:else if config.type === 'radio' && value != null}
+            {config.choices.find(c => c.key === value).val}
+        {:else if config.type === 'tel' && value != null && value != ''}
+            <a href="tel:{value}">{value}</a> <a href="sms:{value}"><FaIcon key="comment" /></a>
+        {:else if value == null || value == ''}
+            -
         {:else}
-            <Input plaintext {value} />
+            {value}
         {/if}
+        </div>
     {:else if config.type === 'checkbox'}
         <Input bind:checked={value}
                id={config.id} type="checkbox" invalid={validationResult.hasError}
@@ -58,7 +86,7 @@
                label={config.label}
                required={config.required}
                hidden={config.hidden}
-               name={config.name || undefined} />
+               name={config.name || undefined} class={className} />
     {:else if config.type === 'radio'}
         {#each config.choices as choice}
             {#if config.multiple}
@@ -69,7 +97,7 @@
                        feedback={_i18n._(validationResult.message)}
                        label={choice.val}
                        hidden={config.hidden}
-                       name={config.name || undefined} />
+                       name={config.name || undefined} class={className} />
             {:else}
                 <Input value={choice.key}
                        id="{config.id}_{choice.key}" type="radio" invalid={validationResult.hasError}
@@ -77,7 +105,7 @@
                        feedback={_i18n._(validationResult.message)}
                        label={choice.val}
                        hidden={config.hidden}
-                       name={config.name || undefined} />
+                       name={config.name || undefined} class={className} />
             {/if}
         {/each}
     {:else if config.type === 'rating'}
@@ -98,7 +126,7 @@
                rows={config.rows || undefined}
                step={config.step || undefined}
                multiple={config.multiple || undefined}
-               hidden={config.hidden}
+               hidden={config.hidden} class={className}
         >
             {#if config.type === 'select'}
                 {#each config.choices as choice}

@@ -1,5 +1,5 @@
 <script>
-    import {Table, Input, ButtonGroup, Button, Accordion, AccordionItem} from 'sveltestrap'
+    import {Table, Input, ButtonGroup, Button, ListGroup, ListGroupItem} from 'sveltestrap'
     import DataTableCell from "./DataTableCell.svelte";
     import FaIcon from '../fontawesome5/Icon.svelte'
     import DataTableHeader from "./DataTableHeader.svelte";
@@ -7,19 +7,22 @@
 
     const _dataTable = globalThis.c('data-table')
     const _i18n = globalThis.c('i18n')
+    const _screen = globalThis.c('screen')
 
     export let dataSource
     export let columns = null
     export let selectableRows = true
+    export let titleField = null
     export let filter = _dataTable.getDefaultFilter()
 
-    async function initConfig(dSource, cols, selectableRows) {
+    async function initConfig(dSource, cols, selectableRows, titleFld) {
         try {
             error = null
             config = await _dataTable.getConfig({
                 dataSource: dSource,
                 columns: cols,
-                selectableRows: selectableRows
+                selectableRows: selectableRows,
+                titleField: titleFld
             })
             columnList = Object.keys(config.columns)
                 .map(c => config.columns[c])
@@ -48,13 +51,13 @@
 
     $: columnCount = columnList.length + (selectableRows ? 1 : 0)
 
-    $: initConfig(dataSource, columns, selectableRows)
+    $: initConfig(dataSource, columns, selectableRows, titleField)
     $: fetchData(config, filter)
     $: pagination = (filter && data) ? _dataTable.getPagination(filter, data) : {}
 
     async function refresh() {
         if (config == null)
-            await initConfig(dataSource, columns, selectableRows)
+            await initConfig(dataSource, columns, selectableRows, titleField)
         if (config != null)
             filter = {...filter}
     }
@@ -65,90 +68,159 @@
 </style>
 
 
-<Table bordered responsive>
-    <thead class="shadow-sm" style="border-bottom: 1px solid grey">
-        <tr>
-            {#if selectableRows}
-                <th>
-                    <Input type="checkbox" />
-                </th>
-            {/if}
-            {#each columnList as column}
-                <DataTableHeader {column} bind:filter />
-            {/each}
-        </tr>
-    </thead>
-    <tbody>
-    {#if error != null}
-        <tr>
-            <td colspan={columnCount} class="text-center text-danger">
-                <h2><FaIcon messageType={MessageType.ERROR} /> {_i18n._('FAILED')}</h2>
-                <div>{_i18n._('FAILED_TO_FETCH_DATA')}</div>
-                <div><Button color="danger" outline on:click={refresh}><FaIcon key="undo" /> {_i18n._('RETRY')}... </Button></div>
-            </td>
-        </tr>
-    {/if}
-    {#if data != null}
-        {#each data.items as row}
-            <tr class:selected-row={row.$$isSelected}>
+{#if _screen.getType() !== 0}
+    <Table bordered responsive>
+        <thead class="shadow-sm" style="border-bottom: 1px solid grey">
+            <tr>
                 {#if selectableRows}
-                    <td>
-                        <Input type="checkbox" bind:checked={row.$$isSelected} />
-                    </td>
+                    <th>
+                        <Input type="checkbox" />
+                    </th>
                 {/if}
-                {#each columnList as col}
-                    <td>
-                        <DataTableCell value={row[col.id]} config={col} {row} />
-                    </td>
+                {#each columnList as column}
+                    <DataTableHeader {column} bind:filter />
                 {/each}
             </tr>
-        {:else}
+        </thead>
+        <tbody>
+        {#if error != null}
             <tr>
-                <td colspan={columnCount} class="text-center text-muted">
-                    <h2>{_i18n._('EMPTY')}</h2>
-                    <div>{_i18n._('EMPTY_TABLE')}</div>
-                    <div><Button color="success"><FaIcon key="plus" /> {_i18n._('CREATE_NEW')}... </Button></div>
+                <td colspan={columnCount} class="text-center text-danger">
+                    <h2><FaIcon messageType={MessageType.ERROR} /> {_i18n._('FAILED')}</h2>
+                    <div>{_i18n._('FAILED_TO_FETCH_DATA')}</div>
+                    <div><Button color="danger" outline on:click={refresh}><FaIcon key="undo" /> {_i18n._('RETRY')}... </Button></div>
                 </td>
             </tr>
-        {/each}
-    {/if}
+        {/if}
+        {#if data != null}
+            {#each data.items as row}
+                <tr class:selected-row={row.$$isSelected}>
+                    {#if selectableRows}
+                        <td>
+                            <Input type="checkbox" bind:checked={row.$$isSelected} />
+                        </td>
+                    {/if}
+                    {#each columnList as col}
+                        <td>
+                            <DataTableCell value={row[col.id]} config={col} {row} />
+                        </td>
+                    {/each}
+                </tr>
+            {:else}
+                <tr>
+                    <td colspan={columnCount} class="text-center text-muted">
+                        <h2>{_i18n._('EMPTY')}</h2>
+                        <div>{_i18n._('EMPTY_TABLE')}</div>
+                        <div><Button color="success"><FaIcon key="plus" /> {_i18n._('CREATE_NEW')}... </Button></div>
+                    </td>
+                </tr>
+            {/each}
+        {/if}
+        {#if data == null && error == null}
+            <h2 class="text-center mt-2 text-muted"><FaIcon key="circle-notch" spin={true} /> {_i18n._('LOADING')}...</h2>
+        {/if}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan={columnCount}>
+                    <ButtonGroup>
+                        {#if data}
+                            <Button outline color="primary" disabled={!pagination.canGoFirst} on:click={() => filter = {...filter, currentPage: 0}}>
+                                {_i18n._('FIRST')}
+                            </Button>
+                            <Button outline color="primary" disabled={!pagination.canGoPrev} on:click={() => filter = {...filter, currentPage: filter.currentPage - 1}}>
+                                {_i18n._('PREV')}
+                            </Button>
+                            <Button outline color="primary">
+                                <Input type="select" bind:value={filter.pageSize} class="form-select-sm">
+                                    <option value={5}>5</option>
+                                    <option value={10}>10</option>
+                                    <option value={15}>15</option>
+                                </Input>
+                            </Button>
+                            <Button outline color="primary" disabled={!pagination.canGoNext} on:click={() => filter = {...filter, currentPage: filter.currentPage + 1}}>
+                                {_i18n._('NEXT')}
+                            </Button>
+                            <Button outline color="primary" disabled={!pagination.canGoLast} on:click={() => filter = {...filter, currentPage: data.pageCount - 1}}>
+                                {_i18n._('LAST')}
+                            </Button>
+                        {/if}
+                        <Button outline color="primary" on:click={refresh}>
+                            <FaIcon key="undo" />
+                        </Button>
+                    </ButtonGroup>
+                    <span class="float-end text-muted">
+                        {(data && data.totalCount) || 0} {_i18n._('TOTAL')}
+                    </span>
+                </td>
+            </tr>
+        </tfoot>
+    </Table>
+{:else}
     {#if data == null && error == null}
         <h2 class="text-center mt-2 text-muted"><FaIcon key="circle-notch" spin={true} /> {_i18n._('LOADING')}...</h2>
     {/if}
-    </tbody>
-    <tfoot>
-        <tr>
-            <td colspan={columnCount}>
-                <ButtonGroup>
-                    {#if data}
-                        <Button outline color="primary" disabled={!pagination.canGoFirst} on:click={() => filter = {...filter, currentPage: 0}}>
-                            {_i18n._('FIRST')}
-                        </Button>
-                        <Button outline color="primary" disabled={!pagination.canGoPrev} on:click={() => filter = {...filter, currentPage: filter.currentPage - 1}}>
-                            {_i18n._('PREV')}
-                        </Button>
-                        <Button outline color="primary">
-                            <Input type="select" bind:value={filter.pageSize} class="form-select-sm">
-                                <option value={5}>5</option>
-                                <option value={10}>10</option>
-                                <option value={15}>15</option>
-                            </Input>
-                        </Button>
-                        <Button outline color="primary" disabled={!pagination.canGoNext} on:click={() => filter = {...filter, currentPage: filter.currentPage + 1}}>
-                            {_i18n._('NEXT')}
-                        </Button>
-                        <Button outline color="primary" disabled={!pagination.canGoLast} on:click={() => filter = {...filter, currentPage: data.pageCount - 1}}>
-                            {_i18n._('LAST')}
-                        </Button>
-                    {/if}
-                    <Button outline color="primary" on:click={refresh}>
-                        <FaIcon key="undo" />
+    {#if error != null}
+        <div class="text-center text-danger">
+            <h2><FaIcon messageType={MessageType.ERROR} /> {_i18n._('FAILED')}</h2>
+            <div>{_i18n._('FAILED_TO_FETCH_DATA')}</div>
+            <div><Button color="danger" outline on:click={refresh}><FaIcon key="undo" /> {_i18n._('RETRY')}... </Button></div>
+        </div>
+    {/if}
+    {#if data != null}
+        <ListGroup flush>
+            {#each data.items as row}
+                <ListGroupItem class="list-group-item-action {row.$$isSelected ? 'active' : ''}">
+                    <h5 class="mb-1">
+                        <!--<Input type="checkbox" bind:checked={row.$$isSelected} />-->
+                        <DataTableCell value={row[config.titleField]} config={config.columns[config.titleField]} {row} />
+                    </h5>
+                    <!--<p class="mb-1">
+                    </p>-->
+                    <small>
+                        {#each columnList as col, i}
+                            <span class="text-black-50">
+                                {#if col.id !== config.titleField && row[col.id] != null && row[col.id] !== ''}
+                                    {#if i > 0}&bull;{/if}
+                                    <DataTableCell value={row[col.id]} config={col} {row} />
+                                {/if}
+                            </span>
+                        {/each}
+
+                    </small>
+                </ListGroupItem>
+            {/each}
+        </ListGroup>
+        <div>
+            <ButtonGroup>
+                {#if data}
+                    <Button outline color="primary" disabled={!pagination.canGoFirst} on:click={() => filter = {...filter, currentPage: 0}}>
+                        {_i18n._('FIRST')}
                     </Button>
-                </ButtonGroup>
-                <span class="float-end text-muted">
-                    {(data && data.totalCount) || 0} {_i18n._('TOTAL')}
-                </span>
-            </td>
-        </tr>
-    </tfoot>
-</Table>
+                    <Button outline color="primary" disabled={!pagination.canGoPrev} on:click={() => filter = {...filter, currentPage: filter.currentPage - 1}}>
+                        {_i18n._('PREV')}
+                    </Button>
+                    <Button outline color="primary">
+                        <Input type="select" bind:value={filter.pageSize} class="form-select-sm">
+                            <option value={5}>5</option>
+                            <option value={10}>10</option>
+                            <option value={15}>15</option>
+                        </Input>
+                    </Button>
+                    <Button outline color="primary" disabled={!pagination.canGoNext} on:click={() => filter = {...filter, currentPage: filter.currentPage + 1}}>
+                        {_i18n._('NEXT')}
+                    </Button>
+                    <Button outline color="primary" disabled={!pagination.canGoLast} on:click={() => filter = {...filter, currentPage: data.pageCount - 1}}>
+                        {_i18n._('LAST')}
+                    </Button>
+                {/if}
+                <Button outline color="primary" on:click={refresh}>
+                    <FaIcon key="undo" />
+                </Button>
+            </ButtonGroup>
+            <span class="float-end text-muted">
+                {(data && data.totalCount) || 0} {_i18n._('TOTAL')}
+            </span>
+        </div>
+    {/if}
+{/if}

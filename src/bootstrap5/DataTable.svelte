@@ -61,6 +61,8 @@
         if (config != null)
             filter = {...filter}
     }
+
+    let selectAll = false
 </script>
 
 <style>
@@ -74,7 +76,7 @@
             <tr>
                 {#if selectableRows}
                     <th>
-                        <Input type="checkbox" />
+                        <Input type="checkbox" bind:checked={selectAll} />
                     </th>
                 {/if}
                 {#each columnList as column}
@@ -94,10 +96,10 @@
         {/if}
         {#if data != null}
             {#each data.items as row}
-                <tr class:selected-row={row.$$isSelected}>
+                <tr class:selected-row={row.$$isSelected || selectAll}>
                     {#if selectableRows}
                         <td>
-                            <Input type="checkbox" bind:checked={row.$$isSelected} />
+                            <Input type="checkbox" checked={row.$$isSelected || selectAll} on:change={e => row.$$isSelected = e.target.checked} />
                         </td>
                     {/if}
                     {#each columnList as col}

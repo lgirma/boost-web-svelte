@@ -39,6 +39,7 @@
     let createdObj = {}
     let filterObj = {}
     let detailForm = {...updateForm, readonly: true}
+    let toggleFilter = false
 
     async function goto(page, e) {
         if (e)
@@ -105,6 +106,27 @@
     }
 
     $: init(page, pageParams)
+
+    async function exportToExcel() {
+        try {
+            const res = await _http.request("post", _config.exportUrl, {...filterObj, format: 'excel'})
+            const contentDisp = res.headers.get("Content-Disposition")
+            if (contentDisp == null) {
+                _msgBox.showError("Empty content disposition")
+                return
+            }
+            const fileName = contentDisp.split('filename=')[1].split(';')[0].trim();
+            const blob = await res.blob()
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.setAttribute("download", fileName);
+            a.click();
+            return false;
+        } catch (e) {
+            _apiError.handle(e, _ => {})
+            console.error(e)
+        }
+    }
 </script>
 
 {#if currentPage === pages.LIST}
@@ -114,7 +136,7 @@
                 <h4>{_config.namePlural}</h4>
             </svelte:fragment>
             <svelte:fragment slot="left">
-                <Card class="mb-1">
+                <Card class="mb-1 d-md-block {toggleFilter ? '' : 'd-none'}">
                     <CardHeader>
                         <CardTitle>{_i18n._('FILTER')}</CardTitle>
                     </CardHeader>
@@ -124,9 +146,15 @@
                 </Card>
             </svelte:fragment>
             <svelte:fragment slot="content">
-                <a class="btn btn-success mb-2" href="#/{rootUrl}/new">
-                    <FaIcon key="plus-circle" /> {_i18n._('CREATE_NEW')}
+                <a class="btn btn-outline-success mb-2" href="#/{rootUrl}/new">
+                    <FaIcon key="plus-circle" /> <span class="d-md-inline d-none">{_i18n._('CREATE_NEW')}</span>
                 </a>
+                <Button color="secondary" outline class="mb-2" on:click={exportToExcel}>
+                    <FaIcon key="file-excel" /> <span class="d-md-inline d-none">{_i18n._('EXPORT_TO_EXCEL')}</span>
+                </Button>
+                <Button color="light" class="mb-2 float-end d-md-none d-inline" on:click={() => toggleFilter = !toggleFilter}>
+                    <FaIcon key="search" />
+                </Button>
                 <DataTable {..._config.dataTable} bind:filter={filterObj} />
             </svelte:fragment>
         </PageContent>

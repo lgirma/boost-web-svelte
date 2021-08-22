@@ -15,5 +15,6 @@ export default {
   EDIT: 'ማስተካከያ',
   FILTER: 'ማጣርያ',
   CREATE: 'አስገባ',
-  UPDATE: 'አስገባ'
+  UPDATE: 'አስገባ',
+  EXPORT_TO_EXCEL: 'ወደ ኤክሴል ገልብጥ'
 }

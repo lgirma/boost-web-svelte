@@ -15,5 +15,6 @@ export default {
   EDIT: 'Edit',
   FILTER: 'Filter',
   CREATE: 'Create',
-  UPDATE: 'Update'
+  UPDATE: 'Update',
+  EXPORT_TO_EXCEL: 'Export to Excel'
 }

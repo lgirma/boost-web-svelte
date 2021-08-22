@@ -2,6 +2,7 @@
     import {Input, Label, FormGroup, FormText} from 'sveltestrap'
     import {Rating} from '..'
     import FaIcon from '../fontawesome5/Icon.svelte'
+    import StaticValue from './StaticValue.svelte'
 
     let _form = globalThis.c('form')
     let _i18n = globalThis.c('i18n')
@@ -61,7 +62,7 @@
     {/if}
     {#if config.readonly}
         <div class="fs-5" style="border-bottom: 1px solid #EEE;">
-        {#if config.type === 'checkbox'}
+        <!--{#if config.type === 'checkbox'}
             {value ? _i18n._('YES') : _i18n._('NO')}
         {:else if config.type === 'rating'}
             {#each new Array(config.max || 5).fill(0) as i}
@@ -77,7 +78,8 @@
             -
         {:else}
             {value}
-        {/if}
+        {/if}-->
+            <StaticValue type={config.type} {value} max={config.max} choices={config.choices} />
         </div>
     {:else if config.type === 'checkbox'}
         <Input bind:checked={value}

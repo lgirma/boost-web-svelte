@@ -151,8 +151,8 @@
                             <FaIcon key="undo" />
                         </Button>
                     </ButtonGroup>
-                    <span class="float-end text-muted">
-                        {(data && data.totalCount) || 0} {_i18n._('TOTAL')}
+                    <span class="float-end">
+                        <FaIcon key="sort-amount-down" class="text-info" /> {(data && data.totalCount) || 0}
                     </span>
                 </td>
             </tr>
@@ -170,7 +170,7 @@
         </div>
     {/if}
     {#if data != null}
-        <ListGroup flush>
+        <ListGroup flush class="shadow-sm">
             {#each data.items as row}
                 <ListGroupItem class="list-group-item-action {row.$$isSelected ? 'active' : ''}">
                     <h5 class="mb-1">
@@ -183,7 +183,7 @@
                         {#each columnList as col, i}
                             <span class="text-black-50">
                                 {#if col.id !== config.titleField && row[col.id] != null && row[col.id] !== ''}
-                                    {#if i > 0}&bull;{/if}
+                                    {#if i > 1}<span style="opacity: 0.3">&bull;</span>{/if}
                                     <DataTableCell value={row[col.id]} config={col} {row} />
                                 {/if}
                             </span>
@@ -193,14 +193,14 @@
                 </ListGroupItem>
             {/each}
         </ListGroup>
-        <div>
+        <div class="mt-2">
             <ButtonGroup>
                 {#if data}
                     <Button outline color="primary" disabled={!pagination.canGoFirst} on:click={() => filter = {...filter, currentPage: 0}}>
-                        {_i18n._('FIRST')}
+                        <FaIcon key="step-backward" />
                     </Button>
                     <Button outline color="primary" disabled={!pagination.canGoPrev} on:click={() => filter = {...filter, currentPage: filter.currentPage - 1}}>
-                        {_i18n._('PREV')}
+                        <FaIcon key="backward" />
                     </Button>
                     <Button outline color="primary">
                         <Input type="select" bind:value={filter.pageSize} class="form-select-sm">
@@ -210,18 +210,18 @@
                         </Input>
                     </Button>
                     <Button outline color="primary" disabled={!pagination.canGoNext} on:click={() => filter = {...filter, currentPage: filter.currentPage + 1}}>
-                        {_i18n._('NEXT')}
+                        <FaIcon key="forward" />
                     </Button>
                     <Button outline color="primary" disabled={!pagination.canGoLast} on:click={() => filter = {...filter, currentPage: data.pageCount - 1}}>
-                        {_i18n._('LAST')}
+                        <FaIcon key="step-forward" />
                     </Button>
                 {/if}
                 <Button outline color="primary" on:click={refresh}>
                     <FaIcon key="undo" />
                 </Button>
             </ButtonGroup>
-            <span class="float-end text-muted">
-                {(data && data.totalCount) || 0} {_i18n._('TOTAL')}
+            <span class="float-end">
+                <FaIcon key="sort-amount-down" class="text-info" /> {(data && data.totalCount) || 0}
             </span>
         </div>
     {/if}

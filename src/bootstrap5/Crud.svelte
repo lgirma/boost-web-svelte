@@ -95,6 +95,34 @@
             id, name, namePlural, dataTable, detailUrl, updateUrl, createUrl,
             createForm, updateForm, filterForm, getFilter, getNew
         })
+        _config.dataTable.commands = [
+            {
+                id: 'createNew',
+                iconKey: 'plus-circle',
+                class: 'btn btn-outline-success',
+                linkTo: `#/${rootUrl}/new`
+            },
+            {
+                id: 'exportToExcel',
+                iconKey: 'file-excel',
+                class: 'btn btn-outline-secondary',
+                invoke: exportToExcel
+            },
+            {
+                id: 'delete',
+                iconKey: 'times-circle',
+                class: 'btn btn-outline-danger',
+                confirm: true,
+                invoke: deleteSelected,
+                condition: rows => rows.length > 0
+            },
+            {
+                class: 'float-end btn btn-light d-md-none d-inline',
+                iconKey: 'search',
+                invoke: () => toggleFilter = !toggleFilter
+            },
+            ..._config.dataTable.commands
+        ]
         if (pageName === 'list')
             await goto(pages.LIST)
         else if (pageName === 'edit')
@@ -127,6 +155,10 @@
             console.error(e)
         }
     }
+
+    async function deleteSelected(rows) {
+        alert('Deleting ' + rows.length)
+    }
 </script>
 
 {#if currentPage === pages.LIST}
@@ -146,7 +178,7 @@
                 </Card>
             </svelte:fragment>
             <svelte:fragment slot="content">
-                <a class="btn btn-outline-success mb-2" href="#/{rootUrl}/new">
+                <!--<a class="btn btn-outline-success mb-2" href="#/{rootUrl}/new">
                     <FaIcon key="plus-circle" /> <span class="d-md-inline d-none">{_i18n._('CREATE_NEW')}</span>
                 </a>
                 <Button color="secondary" outline class="mb-2" on:click={exportToExcel}>
@@ -154,7 +186,7 @@
                 </Button>
                 <Button color="light" class="mb-2 float-end d-md-none d-inline" on:click={() => toggleFilter = !toggleFilter}>
                     <FaIcon key="search" />
-                </Button>
+                </Button>-->
                 <DataTable {..._config.dataTable} bind:filter={filterObj} />
             </svelte:fragment>
         </PageContent>

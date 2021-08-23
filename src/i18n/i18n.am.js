@@ -16,5 +16,7 @@ export default {
   FILTER: 'ማጣርያ',
   CREATE: 'አስገባ',
   UPDATE: 'አስገባ',
-  EXPORT_TO_EXCEL: 'ወደ ኤክሴል ገልብጥ'
+  EXPORT_TO_EXCEL: 'ወደ Excel ገልብጥ',
+  DELETE: 'አጥፋ',
+  ITEMS_SELECTED: '{0} ዝርዝሮችን መርጠዋል።'
 }

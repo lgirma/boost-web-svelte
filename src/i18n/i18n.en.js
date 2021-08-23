@@ -16,5 +16,7 @@ export default {
   FILTER: 'Filter',
   CREATE: 'Create',
   UPDATE: 'Update',
-  EXPORT_TO_EXCEL: 'Export to Excel'
+  EXPORT_TO_EXCEL: 'Export to Excel',
+  DELETE: 'Delete',
+  ITEMS_SELECTED: '{0} item(s) selected.'
 }

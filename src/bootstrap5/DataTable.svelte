@@ -4,9 +4,11 @@
     import FaIcon from '../fontawesome5/Icon.svelte'
     import DataTableHeader from "./DataTableHeader.svelte";
     import {MessageType} from 'boost-web'
+    import DataTableCommand from "./DataTableCommand.svelte";
 
     const _dataTable = globalThis.c('data-table')
     const _i18n = globalThis.c('i18n')
+    const _str = globalThis.c('string-utils')
     const _screen = globalThis.c('screen')
 
     export let dataSource
@@ -14,6 +16,7 @@
     export let selectableRows = true
     export let titleField = null
     export let filter = _dataTable.getDefaultFilter()
+    export let commands = []
 
     async function initConfig(dSource, cols, selectableRows, titleFld) {
         try {
@@ -40,8 +43,9 @@
         try {
             error = null
             data = await _dataTable.getData(cnfg, fltr)
+        } catch (e) {
+            error = e
         }
-        catch (e) { error = e }
     }
 
     let config = null
@@ -62,7 +66,11 @@
             filter = {...filter}
     }
 
-    let selectAll = false
+    function onToggleSelectAll(e) {
+        if (data == null || data.items == null || data.items.length == 0)
+            return
+        data.items = [...data.items.map(i => ({...i, $$isSelected: e.target.checked}))]
+    }
 </script>
 
 <style>
@@ -71,12 +79,15 @@
 
 
 {#if _screen.getType() !== 0}
+    {#each commands as command}
+        <DataTableCommand {command} selectedRows={data && data.items.filter(i => i.$$isSelected) || []} />
+    {/each}
     <Table bordered responsive>
         <thead class="shadow-sm" style="border-bottom: 1px solid grey">
             <tr>
                 {#if selectableRows}
                     <th>
-                        <Input type="checkbox" bind:checked={selectAll} />
+                        <Input type="checkbox" on:change={onToggleSelectAll} />
                     </th>
                 {/if}
                 {#each columnList as column}
@@ -96,10 +107,10 @@
         {/if}
         {#if data != null}
             {#each data.items as row}
-                <tr class:selected-row={row.$$isSelected || selectAll}>
+                <tr class:selected-row={row.$$isSelected}>
                     {#if selectableRows}
                         <td>
-                            <Input type="checkbox" checked={row.$$isSelected || selectAll} on:change={e => row.$$isSelected = e.target.checked} />
+                            <Input type="checkbox" bind:checked={row.$$isSelected} />
                         </td>
                     {/if}
                     {#each columnList as col}
@@ -170,6 +181,9 @@
         </div>
     {/if}
     {#if data != null}
+        {#each commands as command}
+            <DataTableCommand {command} selectedRows={data.items || []} />
+        {/each}
         <ListGroup flush class="shadow-sm">
             {#each data.items as row}
                 <ListGroupItem class="list-group-item-action {row.$$isSelected ? 'active' : ''}">

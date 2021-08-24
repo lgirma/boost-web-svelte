@@ -10,6 +10,8 @@
     const _i18n = globalThis.c('i18n')
 
     async function onCommandInvoke() {
+        if (command.shouldSelect && selectedRows.length < 1)
+            return
         if (command.condition && !command.condition(selectedRows))
             return
         if (command.confirm && !await _confirm.showAsync(null, _i18n._('ITEMS_SELECTED', selectedRows.length)))
@@ -26,7 +28,7 @@
         <span class="d-md-inline d-none">{_str.humanized_i18n(command.id || command.label)}</span>
     </a>&nbsp;
 {:else}
-    <button on:click={onCommandInvoke} class="{command.class} mb-2" style={command.style}>
+    <button on:click={onCommandInvoke} class="{command.class} mb-2" style={command.style} disabled={command.shouldSelect && selectedRows.length === 0}>
         {#if command.iconKey}
             <FaIcon key={command.iconKey} />
         {/if}

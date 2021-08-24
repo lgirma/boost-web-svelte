@@ -70,6 +70,13 @@
         }
     }
 
+    function resetFilter() {
+        filterObj = {
+            ..._dataTable.getDefaultFilter(),
+            ...getFilter()
+        }
+    }
+
     async function onCreate() {
         try {
             await _http.post(_config.createUrl, createdObj)
@@ -114,7 +121,8 @@
                 class: 'btn btn-outline-danger',
                 confirm: true,
                 invoke: deleteSelected,
-                condition: rows => rows.length > 0
+                condition: rows => rows.length > 0,
+                shouldSelect: true
             },
             {
                 class: 'float-end btn btn-light d-md-none d-inline',
@@ -174,6 +182,10 @@
                     </CardHeader>
                     <CardBody>
                         <Form bind:forObj={filterObj} formConfig={_config.filterForm} />
+                        <div class="mt-2">
+                            <Button outline color="primary" size="sm"><FaIcon key="search" /> {_i18n._('FILTER')}</Button>
+                            <Button outline color="secondary" size="sm" on:click={resetFilter}><FaIcon key="times" /> {_i18n._('CLEAR')}</Button>
+                        </div>
                     </CardBody>
                 </Card>
             </svelte:fragment>
@@ -230,14 +242,15 @@
         </svelte:fragment>
         <svelte:fragment slot="content">
             <div in:fly={{x: 100}}>
+                <slot name="detail-top" detail={updatedObj}></slot>
                 <Form forObj={updatedObj} formConfig={detailForm}>
                     <div class="mt-2">
                         <a class="btn btn-brand" href="#/{rootUrl}/edit/{pageParams}"><FaIcon key="pen" /> {_i18n._('EDIT')}</a>
                         <a class="btn btn-light" href="#/{rootUrl}">{_i18n._('CANCEL')}</a>
                     </div>
                 </Form>
+                <slot name="detail-bottom" detail={updatedObj}></slot>
             </div>
-            <slot name="detail"></slot>
         </svelte:fragment>
     </PageContent>
 {:else if currentPage === pages.CREATE}

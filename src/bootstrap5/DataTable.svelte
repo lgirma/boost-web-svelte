@@ -5,6 +5,7 @@
     import DataTableHeader from "./DataTableHeader.svelte";
     import {MessageType} from 'boost-web'
     import DataTableCommand from "./DataTableCommand.svelte";
+    import DataTablePagination from "./DataTablePagination.svelte";
 
     const _dataTable = globalThis.c('data-table')
     const _i18n = globalThis.c('i18n')
@@ -66,11 +67,20 @@
             filter = {...filter}
     }
 
-    function onToggleSelectAll(e) {
+    /*function onToggleSelectAll(e) {
         if (data == null || data.items == null || data.items.length == 0)
             return
         data.items = [...data.items.map(i => ({...i, $$isSelected: e.target.checked}))]
+    }*/
+    let selectAll = false
+
+    function updateSelection(all) {
+        if (data != null && data.items != null && data.items.length > 0)
+            data.items = [...data.items.map(i => ({...i, $$isSelected: all}))]
     }
+
+    $: updateSelection(selectAll)
+    $: selectedRows = data && data.items.filter(i => i.$$isSelected) || []
 </script>
 
 <style>
@@ -80,14 +90,14 @@
 
 {#if _screen.getType() !== 0}
     {#each commands as command}
-        <DataTableCommand {command} selectedRows={data && data.items.filter(i => i.$$isSelected) || []} />
+        <DataTableCommand {command} {selectedRows} />
     {/each}
     <Table bordered responsive>
         <thead class="shadow-sm" style="border-bottom: 1px solid grey">
             <tr>
                 {#if selectableRows}
                     <th>
-                        <Input type="checkbox" on:change={onToggleSelectAll} />
+                        <Input type="checkbox" bind:checked={selectAll} />
                     </th>
                 {/if}
                 {#each columnList as column}
@@ -136,32 +146,7 @@
         <tfoot>
             <tr>
                 <td colspan={columnCount}>
-                    <ButtonGroup>
-                        {#if data}
-                            <Button outline color="primary" disabled={!pagination.canGoFirst} on:click={() => filter = {...filter, currentPage: 0}}>
-                                {_i18n._('FIRST')}
-                            </Button>
-                            <Button outline color="primary" disabled={!pagination.canGoPrev} on:click={() => filter = {...filter, currentPage: filter.currentPage - 1}}>
-                                {_i18n._('PREV')}
-                            </Button>
-                            <Button outline color="primary">
-                                <Input type="select" bind:value={filter.pageSize} class="form-select-sm">
-                                    <option value={5}>5</option>
-                                    <option value={10}>10</option>
-                                    <option value={15}>15</option>
-                                </Input>
-                            </Button>
-                            <Button outline color="primary" disabled={!pagination.canGoNext} on:click={() => filter = {...filter, currentPage: filter.currentPage + 1}}>
-                                {_i18n._('NEXT')}
-                            </Button>
-                            <Button outline color="primary" disabled={!pagination.canGoLast} on:click={() => filter = {...filter, currentPage: data.pageCount - 1}}>
-                                {_i18n._('LAST')}
-                            </Button>
-                        {/if}
-                        <Button outline color="primary" on:click={refresh}>
-                            <FaIcon key="undo" />
-                        </Button>
-                    </ButtonGroup>
+                    <DataTablePagination pageCount={data && data.pageCount || 0} bind:filter {pagination} {refresh} />
                     <span class="float-end">
                         <FaIcon key="sort-amount-down" class="text-info" /> {(data && data.totalCount) || 0}
                     </span>
@@ -181,18 +166,22 @@
         </div>
     {/if}
     {#if data != null}
+        {#if selectableRows}
+            <Button outline color="light" class="text-dark mb-2" on:click={() => selectAll = !selectAll}>
+                <input class="form-check-input" type="checkbox" bind:checked={selectAll}>
+                <FaIcon key="list" />
+            </Button>
+        {/if}
         {#each commands as command}
-            <DataTableCommand {command} selectedRows={data.items || []} />
+            <DataTableCommand {command} {selectedRows} />
         {/each}
         <ListGroup flush class="shadow-sm">
             {#each data.items as row}
-                <ListGroupItem class="list-group-item-action {row.$$isSelected ? 'active' : ''}">
+                <ListGroupItem class="list-group-item-action" style="{row.$$isSelected ? 'background: #EEE' : ''}">
                     <h5 class="mb-1">
-                        <!--<Input type="checkbox" bind:checked={row.$$isSelected} />-->
+                        <input class="form-check-input" type="checkbox" bind:checked={row.$$isSelected} >
                         <DataTableCell value={row[config.titleField]} config={config.columns[config.titleField]} {row} />
                     </h5>
-                    <!--<p class="mb-1">
-                    </p>-->
                     <small>
                         {#each columnList as col, i}
                             <span class="text-black-50">
@@ -208,32 +197,7 @@
             {/each}
         </ListGroup>
         <div class="mt-2">
-            <ButtonGroup>
-                {#if data}
-                    <Button outline color="primary" disabled={!pagination.canGoFirst} on:click={() => filter = {...filter, currentPage: 0}}>
-                        <FaIcon key="step-backward" />
-                    </Button>
-                    <Button outline color="primary" disabled={!pagination.canGoPrev} on:click={() => filter = {...filter, currentPage: filter.currentPage - 1}}>
-                        <FaIcon key="backward" />
-                    </Button>
-                    <Button outline color="primary">
-                        <Input type="select" bind:value={filter.pageSize} class="form-select-sm">
-                            <option value={5}>5</option>
-                            <option value={10}>10</option>
-                            <option value={15}>15</option>
-                        </Input>
-                    </Button>
-                    <Button outline color="primary" disabled={!pagination.canGoNext} on:click={() => filter = {...filter, currentPage: filter.currentPage + 1}}>
-                        <FaIcon key="forward" />
-                    </Button>
-                    <Button outline color="primary" disabled={!pagination.canGoLast} on:click={() => filter = {...filter, currentPage: data.pageCount - 1}}>
-                        <FaIcon key="step-forward" />
-                    </Button>
-                {/if}
-                <Button outline color="primary" on:click={refresh}>
-                    <FaIcon key="undo" />
-                </Button>
-            </ButtonGroup>
+            <DataTablePagination pageCount={data && data.pageCount || 0} bind:filter {pagination} {refresh} />
             <span class="float-end">
                 <FaIcon key="sort-amount-down" class="text-info" /> {(data && data.totalCount) || 0}
             </span>

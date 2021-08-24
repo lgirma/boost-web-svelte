@@ -10,7 +10,7 @@
     <Col sm="12" md="2" />
 </Row>
 <Row class="mb-1 mt-1">
-    <Col sm="12" md="2">
+    <Col sm="9" md="2">
         <slot name="left" />
     </Col>
     <Col>

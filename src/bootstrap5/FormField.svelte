@@ -114,6 +114,22 @@
         <div>
             <Rating max={config.max || 5} bind:value />
         </div>
+    {:else if config.type === 'file'}
+        <Input bind:files={value}
+               id={config.id} type="file" invalid={validationResult.hasError}
+               feedback={_i18n._(validationResult.message)}
+               required={config.required}
+               name={config.name || undefined}
+               placeholder={try_i18nText(config, 'placeholder') || undefined}
+               maxlength={config.maxlength || undefined}
+               max={config.max || undefined}
+               min={config.min || undefined}
+               pattern={config.pattern || undefined}
+               rows={config.rows || undefined}
+               step={config.step || undefined}
+               multiple={config.multiple || undefined}
+               hidden={config.hidden} class={className}
+        />
     {:else}
         <Input bind:value
                id={config.id} type={config.type} invalid={validationResult.hasError}

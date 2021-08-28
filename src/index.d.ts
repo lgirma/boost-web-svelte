@@ -81,12 +81,36 @@ export type CrudProps = CrudOptionsFrom & {
 
 export class BS5Crud extends SvelteComponentTyped<CrudProps, {}> {}
 
-export interface UploadableImageProps {
+export interface SecureFilesProps {
     id?: string
     icon?: string
     uploadUrl: string
 }
 
-export class BS5UploadableImage extends SvelteComponentTyped<{}, {}> {}
+export class SecureFiles extends SvelteComponentTyped<SecureFilesProps, {}> {}
 
 export class SecureFile extends SvelteComponentTyped<{id: string}, {}> {}
+
+export interface KeyValProps {
+    icon?: string
+    label: string
+    value: any
+    unit?: string
+}
+
+export class KeyVal extends SvelteComponentTyped<{}, {}> {}
+
+export interface FileUploaderProps {
+    multiple?: boolean
+    url: string
+}
+
+export class FileUploader extends SvelteComponentTyped<FileUploaderProps, {}> {}
+
+export interface FileLinkProps {
+    id: string
+    contentType?: string
+    name: string
+}
+
+export class FileLink extends SvelteComponentTyped<FileLinkProps, {}> {}

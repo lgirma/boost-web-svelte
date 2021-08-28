@@ -54,7 +54,7 @@
 </script>
 
 <FormGroup>
-    {#if config.type !== 'checkbox' && !config.hideLabel}
+    {#if (config.readonly || config.type !== 'checkbox') && !config.hideLabel}
         <Label for={config.id}>
             <span class:text-muted={config.readonly}>{config.label}</span>
             {#if config.required}<span style="color: red">*</span>{/if}
@@ -62,23 +62,6 @@
     {/if}
     {#if config.readonly}
         <div class="fs-5" style="border-bottom: 1px solid #EEE;">
-        <!--{#if config.type === 'checkbox'}
-            {value ? _i18n._('YES') : _i18n._('NO')}
-        {:else if config.type === 'rating'}
-            {#each new Array(config.max || 5).fill(0) as i}
-                <span class="boost-star">{value > i ? '★' : '☆'}</span>
-            {/each}
-        {:else if config.type === 'select' && value != null}
-            {config.choices.find(c => c.key === value).val}
-        {:else if config.type === 'radio' && value != null}
-            {config.choices.find(c => c.key === value).val}
-        {:else if config.type === 'tel' && value != null && value != ''}
-            <a href="tel:{value}">{value}</a> <a href="sms:{value}"><FaIcon key="comment" /></a>
-        {:else if value == null || value == ''}
-            -
-        {:else}
-            {value}
-        {/if}-->
             <StaticValue type={config.type} {value} max={config.max} choices={config.choices} />
         </div>
     {:else if config.type === 'checkbox'}

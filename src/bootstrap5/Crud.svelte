@@ -21,6 +21,7 @@
     export let createForm = {}
     export let filterForm = {}
     export let updateForm = {}
+    export let detailForm = {}
     export let getNew
     export let getFilter = () => {}
     export let detailUrl = null
@@ -36,9 +37,9 @@
     let _config = null
     let currentPage = pages.NONE
     let updatedObj = {}
+    let detailObj = {}
     let createdObj = {}
     let filterObj = {}
-    let detailForm = {...updateForm, readonly: true}
     let toggleFilter = false
 
     async function goto(page, e) {
@@ -54,7 +55,7 @@
         } else if (forPage === pages.EDIT) {
             updatedObj = await _http.get(_config.detailUrl(pageParams))
         } else if (forPage === pages.DETAIL) {
-            updatedObj = await _http.get(_config.detailUrl(pageParams))
+            detailObj = await _http.get(_config.detailUrl(pageParams))
         } else {
             filterObj = {
                 ..._dataTable.getDefaultFilter(),
@@ -100,7 +101,7 @@
     async function init(pageName) {
         _config = await _crud.createConfig({
             id, name, namePlural, dataTable, detailUrl, updateUrl, createUrl,
-            createForm, updateForm, filterForm, getFilter, getNew
+            createForm, updateForm, filterForm, detailForm, getFilter, getNew
         })
         _config.dataTable.commands = [
             {
@@ -131,14 +132,7 @@
             },
             ..._config.dataTable.commands
         ]
-        if (pageName === 'list')
-            await goto(pages.LIST)
-        else if (pageName === 'edit')
-            await goto(pages.EDIT)
-        else if (pageName === 'detail')
-            await goto(pages.DETAIL)
-        else if (pageName === 'new')
-            await goto(pages.CREATE)
+        await refresh()
     }
 
     $: init(page, pageParams)
@@ -166,6 +160,17 @@
 
     async function deleteSelected(rows) {
         alert('Deleting ' + rows.length)
+    }
+
+    async function refresh() {
+        if (page === 'list')
+            await goto(pages.LIST)
+        else if (page === 'edit')
+            await goto(pages.EDIT)
+        else if (page === 'detail')
+            await goto(pages.DETAIL)
+        else if (page === 'new')
+            await goto(pages.CREATE)
     }
 </script>
 
@@ -240,16 +245,23 @@
                 </Breadcrumb>
             </div>
         </svelte:fragment>
+
+        <svelte:fragment slot="left">
+            <slot name="detail-left" detail={detailObj} {refresh}></slot>
+        </svelte:fragment>
+        <svelte:fragment slot="right">
+            <slot name="detail-right" detail={detailObj} {refresh}></slot>
+        </svelte:fragment>
         <svelte:fragment slot="content">
             <div in:fly={{x: 100}}>
-                <slot name="detail-top" detail={updatedObj}></slot>
-                <Form forObj={updatedObj} formConfig={detailForm}>
+                <slot name="detail-top" detail={detailObj} {refresh}></slot>
+                <Form forObj={detailObj} formConfig={detailForm}>
                     <div class="mt-2">
                         <a class="btn btn-brand" href="#/{rootUrl}/edit/{pageParams}"><FaIcon key="pen" /> {_i18n._('EDIT')}</a>
                         <a class="btn btn-light" href="#/{rootUrl}">{_i18n._('CANCEL')}</a>
                     </div>
                 </Form>
-                <slot name="detail-bottom" detail={updatedObj}></slot>
+                <slot name="detail-bottom" detail={detailObj}></slot>
             </div>
         </svelte:fragment>
     </PageContent>

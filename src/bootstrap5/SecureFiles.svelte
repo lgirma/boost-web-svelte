@@ -1,12 +1,11 @@
 <script>
     import {Button} from 'sveltestrap'
-    import SecureFile from "../misc/SecureFile.svelte";
+    import SecureFile from "../misc/SecureFilePreview.svelte";
     import FaIcon from '../fontawesome5/Icon.svelte'
 
     export let icon = "user"
     export let id
     export let uploadUrl
-    export let height = 128
 
     let resource = {id}
 
@@ -31,7 +30,7 @@
 {#if resource.id == null}
     <FaIcon key={icon} class="fa-4x text-black-50" />
 {:else}
-    <SecureFile {resource} {height} />
+    <SecureFile {resource} />
 {/if}
 </span>
 <form class="d-inline">

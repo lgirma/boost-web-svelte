@@ -18,5 +18,6 @@ export default {
   UPDATE: 'አስገባ',
   EXPORT_TO_EXCEL: 'ወደ Excel ገልብጥ',
   DELETE: 'አጥፋ',
-  ITEMS_SELECTED: '{0} ዝርዝሮችን መርጠዋል።'
+  ITEMS_SELECTED: '{0} ዝርዝሮችን መርጠዋል።',
+  DETAIL: 'መረጃ'
 }

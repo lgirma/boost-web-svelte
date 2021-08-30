@@ -7,6 +7,9 @@
     let _form = globalThis.c('form')
     let _i18n = globalThis.c('i18n')
 
+    export let id = null
+    let className = ''
+    export {className as class}
     export let forObj
     export let formConfig = null
     export let validationResult = _form.getFormValidationResult()
@@ -48,7 +51,7 @@
     }
 </script>
 
-<Form on:submit={onSubmit} novalidate={config.autoValidate ? 'novalidate' : undefined}>
+<Form on:submit={onSubmit} novalidate={config.autoValidate ? 'novalidate' : undefined} id={id || undefined} class={className || undefined}>
     {#if hasGroups}
         <Card>
             {#each Object.entries(groupedFields) as [grpKey, fieldGroup]}

@@ -29,6 +29,7 @@ export interface BS5ModalProps {
 }
 
 export class BS5Modal extends SvelteComponentTyped<BS5ModalProps, {}> {}
+export class BS5ModalForm extends SvelteComponentTyped<{}, {}> {}
 
 export interface FaIconProps {
     type?: 'solid' | 'regular' | 'brand'

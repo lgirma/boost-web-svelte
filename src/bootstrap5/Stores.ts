@@ -1,5 +1,5 @@
 import {writable} from "svelte/store";
-import type {ToastState, MessageBoxState, BusyModalState, ConfirmDialogState} from "boost-web";
+import type {ToastState, MessageBoxState, BusyModalState, ConfirmDialogState, ModalFormState} from "boost-web";
 import {onContainerInit} from 'boost-web'
 
 /*const msgBox = lazyC('message-box')
@@ -10,6 +10,8 @@ const toast = lazyC('toast')*/
 export const MessageBoxStore = writable<MessageBoxState>({isOpen: false})
 
 export const ConfirmDialogStore = writable<ConfirmDialogState>({isOpen: false})
+
+export const ModalFormStore = writable<ModalFormState>({isOpen: false})
 
 export const BusyModalStore = writable<BusyModalState>({isOpen: false})
 
@@ -30,5 +32,9 @@ onContainerInit.subscribe(container => {
 
     container('toast').onToggle.subscribe(msg => {
         ToastStore.set(msg)
+    })
+
+    container('modal-form').onToggle.subscribe(msg => {
+        ModalFormStore.set(msg)
     })
 })

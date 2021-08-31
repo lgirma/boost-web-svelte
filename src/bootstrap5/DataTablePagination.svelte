@@ -10,7 +10,7 @@
     export let pageCount
 </script>
 
-<ButtonGroup>
+<ButtonGroup size="sm">
     <Button outline color="secondary" disabled={!pagination.canGoFirst} on:click={() => filter = {...filter, currentPage: 0}}>
         <FaIcon key="step-backward" /> <span class="d-none d-md-inline">{_i18n._('FIRST')}</span>
     </Button>

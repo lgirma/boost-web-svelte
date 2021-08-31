@@ -41,7 +41,7 @@
                         {_i18n._($ModalFormStore.declineButtonTitleKey)}
                     </Button>
                 </div>
-                
+
             </Form>
         {/if}
     </ModalBody>

@@ -159,7 +159,13 @@
     }
 
     async function deleteSelected(rows) {
-        alert('Deleting ' + rows.length)
+        try {
+            await _http.post(_config.deleteAllUrl, rows.map(r => r.publicId))
+            _toast.showSuccess('SUCCESS')
+            await refresh()
+        } catch (e) {
+            _apiError.handle(e, _ => {})
+        }
     }
 
     async function refresh() {

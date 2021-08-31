@@ -30,6 +30,7 @@ export interface BS5ModalProps {
 
 export class BS5Modal extends SvelteComponentTyped<BS5ModalProps, {}> {}
 export class BS5ModalForm extends SvelteComponentTyped<{}, {}> {}
+export class BS5AutoComplete extends SvelteComponentTyped<{}, {}> {}
 
 export interface FaIconProps {
     type?: 'solid' | 'regular' | 'brand'
@@ -115,3 +116,11 @@ export interface FileLinkProps {
 }
 
 export class FileLink extends SvelteComponentTyped<FileLinkProps, {}> {}
+
+export interface HttpDataProps {
+    options: RequestInit & {
+        url: string
+    }
+}
+
+export class HttpData extends SvelteComponentTyped<HttpDataProps, {}> {}

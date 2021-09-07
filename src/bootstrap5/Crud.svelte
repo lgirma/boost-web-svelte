@@ -32,6 +32,9 @@
     export let page = 'list'
     export let pageParams = null
 
+    export let createAdapter = _ => _
+    export let updateAdapter = _ => _
+
     const pages = {NONE: 0, LIST: 1, CREATE: 2, DETAIL: 3, EDIT: 4}
 
     let _config = null
@@ -80,7 +83,7 @@
 
     async function onCreate() {
         try {
-            await _http.post(_config.createUrl, createdObj)
+            await _http.post(_config.createUrl, createAdapter(createdObj))
             _toast.showSuccess('SUCCESS')
             window.location.href = `#/${rootUrl}`
         } catch (e) {
@@ -90,7 +93,7 @@
 
     async function onUpdate() {
         try {
-            await _http.post(_config.updateUrl(pageParams), updatedObj)
+            await _http.post(_config.updateUrl(pageParams), updateAdapter(updatedObj))
             _toast.showSuccess('SUCCESS')
             window.location.href = `#/${rootUrl}`
         } catch (e) {
@@ -267,7 +270,7 @@
                         <a class="btn btn-light" href="#/{rootUrl}">{_i18n._('CANCEL')}</a>
                     </div>
                 </Form>
-                <slot name="detail-bottom" detail={detailObj}></slot>
+                <slot name="detail-bottom" detail={detailObj} {refresh}></slot>
             </div>
         </svelte:fragment>
     </PageContent>

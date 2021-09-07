@@ -1,7 +1,7 @@
 <script>
     import {Input, Label, FormGroup, FormText} from 'sveltestrap'
     import {Rating} from '..'
-    import FaIcon from '../fontawesome5/Icon.svelte'
+    import AutoComplete from './AutoComplete.svelte'
     import StaticValue from './StaticValue.svelte'
 
     let _form = globalThis.c('form')
@@ -113,6 +113,14 @@
                multiple={config.multiple || undefined}
                hidden={config.hidden} class={className}
         />
+    {:else if config.type === 'autocomplete'}
+        <AutoComplete bind:value
+                      id={config.id} invalid={validationResult.hasError}
+                      feedback={_i18n._(validationResult.message)}
+                      required={config.required}
+                      name={config.name || undefined}
+                      placeholder={try_i18nText(config, 'placeholder') || undefined}
+                      hidden={config.hidden} {...config.customOptions} />
     {:else}
         <Input bind:value
                id={config.id} type={config.type} invalid={validationResult.hasError}

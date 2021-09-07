@@ -79,6 +79,8 @@ export class BS5DataTable extends SvelteComponentTyped<DataTableOptionsFrom, {}>
 export type CrudProps = CrudOptionsFrom & {
     page?: string
     pageParams?: any
+    createAdapter?: (_: any) => any
+    updateAdapter?: (_: any) => any
 }
 
 export class BS5Crud extends SvelteComponentTyped<CrudProps, {}> {}

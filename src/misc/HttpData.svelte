@@ -3,6 +3,7 @@
     export let options
 
     const _http = globalThis.c('http')
+    const _i18n = globalThis.c('i18n')
     const _apiError = globalThis.c('api-error')
 
     let data
@@ -19,11 +20,11 @@
 </script>
 
 {#if data}
-    <slot data={data}>
+    <slot {data}>
         {data}
     </slot>
 {:else}
     <div class="text-center">
-        <FaIcon key="circle-notch" spin />
+        <h2><FaIcon key="circle-notch" spin /> {_i18n._('LOADING')} ...</h2>
     </div>
 {/if}

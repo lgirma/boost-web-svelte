@@ -28,7 +28,7 @@
 </script>
 
 {#if messageType != null}
-    <i class="{(type === 'solid' ? SolidMsgIcons : RegularMsgIcons)[messageType]} {className}" {style} class:fa-spin={spin}></i>
+    <i class="{(type === 'solid' ? SolidMsgIcons : RegularMsgIcons)[messageType]} {className}" {style} class:fa-spin={spin} on:click></i>
 {:else}
-    <i class="fa{{solid: 's', regular: 'r', brand: 'b'}[type]} fa-{key} {className}" {style} class:fa-spin={spin}></i>
+    <i class="fa{{solid: 's', regular: 'r', brand: 'b'}[type]} fa-{key} {className}" {style} class:fa-spin={spin} on:click></i>
 {/if}

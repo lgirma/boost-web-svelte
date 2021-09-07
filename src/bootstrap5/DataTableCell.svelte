@@ -9,5 +9,5 @@
 {#if config.template}
     {@html config.template(value, row)}
 {:else}
-    <StaticValue {value} type={config.type} />
+    <StaticValue {value} type={config.type} choices={config.choices} max={config.max} />
 {/if}

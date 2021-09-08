@@ -35,6 +35,8 @@
     export let createAdapter = _ => _
     export let updateAdapter = _ => _
 
+    export let skipDefaultDetail = false
+
     const pages = {NONE: 0, LIST: 1, CREATE: 2, DETAIL: 3, EDIT: 4}
 
     let _config = null
@@ -235,7 +237,7 @@
                 <Form bind:forObj={updatedObj} formConfig={_config.updateForm} on:submit={onUpdate}>
                     <div class="mt-2">
                         <Button color="light" class="btn-brand"><FaIcon key="check" /> {_i18n._('UPDATE')}</Button>
-                        <a class="btn btn-light" href="#/{rootUrl}">{_i18n._('CANCEL')}</a>
+                        <a class="btn btn-light" href="javascript:history.go(-1)">{_i18n._('CANCEL')}</a>
                     </div>
                 </Form>
             </div>
@@ -264,12 +266,14 @@
         <svelte:fragment slot="content">
             <div in:fly={{x: 100}}>
                 <slot name="detail-top" detail={detailObj} {refresh}></slot>
-                <Form forObj={detailObj} formConfig={detailForm}>
-                    <div class="mt-2">
-                        <a class="btn btn-brand" href="#/{rootUrl}/edit/{pageParams}"><FaIcon key="pen" /> {_i18n._('EDIT')}</a>
-                        <a class="btn btn-light" href="#/{rootUrl}">{_i18n._('CANCEL')}</a>
-                    </div>
-                </Form>
+                {#if !skipDefaultDetail}
+                    <Form forObj={detailObj} formConfig={detailForm}>
+                        <div class="mt-2">
+                            <a class="btn btn-brand" href="#/{rootUrl}/edit/{pageParams}"><FaIcon key="pen" /> {_i18n._('EDIT')}</a>
+                            <a class="btn btn-light" href="javascript:history.go(-1)">{_i18n._('CANCEL')}</a>
+                        </div>
+                    </Form>
+                {/if}
                 <slot name="detail-bottom" detail={detailObj} {refresh}></slot>
             </div>
         </svelte:fragment>

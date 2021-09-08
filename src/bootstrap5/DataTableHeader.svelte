@@ -6,6 +6,8 @@
     $: sort = filter.sort.find(s => s.by === column.id)
 
     function onClick() {
+        if (!column.sortable)
+            return
         filter = {
             ...filter,
             sort: (srt => {

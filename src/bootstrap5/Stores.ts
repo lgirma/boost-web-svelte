@@ -11,7 +11,7 @@ export const MessageBoxStore = writable<MessageBoxState>({isOpen: false})
 
 export const ConfirmDialogStore = writable<ConfirmDialogState>({isOpen: false})
 
-export const ModalFormStore = writable<ModalFormState>({isOpen: false})
+export const ModalFormStore = writable<ModalFormState>({isOpen: false} as any)
 
 export const BusyModalStore = writable<BusyModalState>({isOpen: false})
 

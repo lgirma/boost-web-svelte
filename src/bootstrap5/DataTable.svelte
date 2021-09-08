@@ -16,17 +16,19 @@
     export let columns = null
     export let selectableRows = true
     export let titleField = null
+    export let skip = []
     export let filter = _dataTable.getDefaultFilter()
     export let commands = []
 
-    async function initConfig(dSource, cols, selectableRows, titleFld) {
+    async function initConfig(dSource, cols, selectableRows, titleFld, skp) {
         try {
             error = null
             config = await _dataTable.getConfig({
                 dataSource: dSource,
                 columns: cols,
                 selectableRows: selectableRows,
-                titleField: titleFld
+                titleField: titleFld,
+                skip: skp
             })
             columnList = Object.keys(config.columns)
                 .map(c => config.columns[c])
@@ -56,13 +58,13 @@
 
     $: columnCount = columnList.length + (selectableRows ? 1 : 0)
 
-    $: initConfig(dataSource, columns, selectableRows, titleField)
+    $: initConfig(dataSource, columns, selectableRows, titleField, skip)
     $: fetchData(config, filter)
     $: pagination = (filter && data) ? _dataTable.getPagination(filter, data) : {}
 
     async function refresh() {
         if (config == null)
-            await initConfig(dataSource, columns, selectableRows, titleField)
+            await initConfig(dataSource, columns, selectableRows, titleField, skip)
         if (config != null)
             filter = {...filter}
     }
@@ -81,6 +83,8 @@
 
     $: updateSelection(selectAll)
     $: selectedRows = data && data.items.filter(i => i.$$isSelected) || []
+
+    $: console.log('DataTable config', config)
 </script>
 
 <style>
@@ -125,7 +129,7 @@
                     {/if}
                     {#each columnList as col}
                         <td>
-                            <DataTableCell value={row[col.id]} config={col} {row} />
+                            <DataTableCell value={col.value ? col.value(row) : row[col.id]} config={col} {row} />
                         </td>
                     {/each}
                 </tr>

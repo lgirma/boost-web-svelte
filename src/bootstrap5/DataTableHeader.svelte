@@ -25,7 +25,6 @@
 <style>
     .header {
         font-weight: normal;
-        border: 1px solid lightgrey;
     }
     .header:hover {
         background: white !important;
@@ -36,7 +35,7 @@
     on:click={onClick} class:fw-bold={!!sort} class:bg-light={sort == null}>
     {column.header}
     {#if column.sortable}
-        <span class="float-end text-black-50">
+        <span class="float-end text-muted" style="opacity: 0.5;">
             {#if sort == null}
                 <FaIcon key="sort" />
             {:else if sort.desc}

@@ -9,5 +9,7 @@
 {#if config.template}
     {@html config.template(value, row)}
 {:else}
-    <StaticValue {value} type={config.type} choices={config.choices} max={config.max} />
+    <StaticValue {value} type={config.type} choices={config.choices} max={config.max} >
+        <span slot="empty"></span>
+    </StaticValue>
 {/if}

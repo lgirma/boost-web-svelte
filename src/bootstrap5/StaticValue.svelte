@@ -11,7 +11,7 @@
 </script>
 
 {#if value == null}
-    -
+    <slot name="empty">-</slot>
 {:else}
     {#if type === 'tel' && !_str.isEmpty(value)}
         <a href="tel:{value}">{value}</a> <a href="sms:{value}"><FaIcon key="sms" /></a>
@@ -32,7 +32,7 @@
     {:else if type === 'datetime' && !_str.isEmpty(value)}
         {new Date(value).toLocaleTimeString()}
     {:else if _str.isEmpty(value)}
-        -
+        <slot name="empty">-</slot>
     {:else}
         {value}
     {/if}

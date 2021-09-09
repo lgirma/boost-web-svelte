@@ -63,17 +63,13 @@
     $: pagination = (filter && data) ? _dataTable.getPagination(filter, data) : {}
 
     async function refresh() {
+        error = null
         if (config == null)
             await initConfig(dataSource, columns, selectableRows, titleField, skip)
         if (config != null)
             filter = {...filter}
     }
 
-    /*function onToggleSelectAll(e) {
-        if (data == null || data.items == null || data.items.length == 0)
-            return
-        data.items = [...data.items.map(i => ({...i, $$isSelected: e.target.checked}))]
-    }*/
     let selectAll = false
 
     function updateSelection(all) {
@@ -97,7 +93,7 @@
         <DataTableCommand {command} {selectedRows} />
     {/each}
     <Table bordered responsive>
-        <thead class="shadow-sm" style="border-bottom: 1px solid grey">
+        <thead class="shadow-sm" style="border-width: 1px">
             <tr>
                 {#if selectableRows}
                     <th>
@@ -113,9 +109,11 @@
         {#if error != null}
             <tr>
                 <td colspan={columnCount} class="text-center text-danger">
-                    <h2><FaIcon messageType={MessageType.ERROR} /> {_i18n._('FAILED')}</h2>
-                    <div>{_i18n._('FAILED_TO_FETCH_DATA')}</div>
-                    <div><Button color="danger" outline on:click={refresh}><FaIcon key="undo" /> {_i18n._('RETRY')}... </Button></div>
+                    <div class="text-center text-muted">
+                        <h2 style="color: indianred"><FaIcon type="regular" key="frown" /></h2>
+                        <div>{_i18n._('FAILED_TO_FETCH_DATA')}</div>
+                        <div><Button size="sm" color="danger" outline on:click={refresh}><FaIcon key="undo" /> {_i18n._('RETRY')}... </Button></div>
+                    </div>
                 </td>
             </tr>
         {/if}
@@ -138,7 +136,7 @@
                     <td colspan={columnCount} class="text-center text-muted">
                         <h2>{_i18n._('EMPTY')}</h2>
                         <div>{_i18n._('EMPTY_TABLE')}</div>
-                        <div><Button color="success"><FaIcon key="plus" /> {_i18n._('CREATE_NEW')}... </Button></div>
+                        <slot name="create-link"></slot>
                     </td>
                 </tr>
             {/each}
@@ -147,12 +145,17 @@
             <h2 class="text-center mt-2 text-muted"><FaIcon key="circle-notch" spin={true} /> {_i18n._('LOADING')}...</h2>
         {/if}
         </tbody>
-        <tfoot>
+        <tfoot class="shadow-sm bg-light" style="border-width: 1px">
             <tr>
                 <td colspan={columnCount}>
                     <DataTablePagination pageCount={data && data.pageCount || 0} bind:filter {pagination} {refresh} />
                     <span class="float-end">
-                        <FaIcon key="sort-amount-down" class="text-info" /> {(data && data.totalCount) || 0}
+                        <button class="btn text-muted">
+                            <FaIcon style="opacity: 0.5" key="sort-amount-down" class="text-info" /> {(data && data.totalCount) || 0}
+                        </button>
+                        <Button outline color="secondary" on:click={refresh}>
+                            <FaIcon key="undo" />
+                        </Button>
                     </span>
                 </td>
             </tr>
@@ -163,10 +166,10 @@
         <h2 class="text-center mt-2 text-muted"><FaIcon key="circle-notch" spin={true} /> {_i18n._('LOADING')}...</h2>
     {/if}
     {#if error != null}
-        <div class="text-center text-danger">
-            <h2><FaIcon messageType={MessageType.ERROR} /> {_i18n._('FAILED')}</h2>
+        <div class="text-center text-muted">
+            <h2 style="color: indianred"><FaIcon type="regular" key="frown" /></h2>
             <div>{_i18n._('FAILED_TO_FETCH_DATA')}</div>
-            <div><Button color="danger" outline on:click={refresh}><FaIcon key="undo" /> {_i18n._('RETRY')}... </Button></div>
+            <div><Button size="sm" color="danger" outline on:click={refresh}><FaIcon key="undo" /> {_i18n._('RETRY')}... </Button></div>
         </div>
     {/if}
     {#if data != null}
@@ -200,10 +203,15 @@
                 </ListGroupItem>
             {/each}
         </ListGroup>
-        <div class="mt-2">
+        <div class="mt-2 bg-light">
             <DataTablePagination pageCount={data && data.pageCount || 0} bind:filter {pagination} {refresh} />
             <span class="float-end">
-                <FaIcon key="sort-amount-down" class="text-info" /> {(data && data.totalCount) || 0}
+                <button class="btn text-muted">
+                    <FaIcon style="opacity: 0.5" key="sort-amount-down" class="text-info" /> {(data && data.totalCount) || 0}
+                </button>
+                <Button outline color="secondary" on:click={refresh}>
+                    <FaIcon key="undo" />
+                </Button>
             </span>
         </div>
     {/if}

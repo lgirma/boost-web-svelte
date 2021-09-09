@@ -30,7 +30,4 @@
     <Button outline color="secondary" disabled={!pagination.canGoLast} on:click={() => filter = {...filter, currentPage: pageCount - 1}}>
         <span class="d-none d-md-inline">{_i18n._('LAST')}</span> <FaIcon key="step-forward" />
     </Button>
-    <Button outline color="secondary" on:click={refresh}>
-        <FaIcon key="undo" />
-    </Button>
 </ButtonGroup>

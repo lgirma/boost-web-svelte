@@ -192,7 +192,7 @@
                 <h4>{_config.namePlural}</h4>
             </svelte:fragment>
             <svelte:fragment slot="left">
-                <Card class="mb-1 d-md-block {toggleFilter ? '' : 'd-none'}">
+                <Card class="mb-1 d-md-block shadow-sm {toggleFilter ? '' : 'd-none'}">
                     <CardHeader>
                         <CardTitle>{_i18n._('FILTER')}</CardTitle>
                     </CardHeader>
@@ -215,7 +215,13 @@
                 <Button color="light" class="mb-2 float-end d-md-none d-inline" on:click={() => toggleFilter = !toggleFilter}>
                     <FaIcon key="search" />
                 </Button>-->
-                <DataTable {..._config.dataTable} bind:filter={filterObj} />
+                <DataTable {..._config.dataTable} bind:filter={filterObj}>
+                    <svelte:fragment slot="create-link">
+                        <a class="btn btn-outline-success mb-2" href="#/{rootUrl}/new">
+                            <FaIcon key="plus-circle" /> <span class="d-md-inline d-none">{_i18n._('CREATE_NEW')}</span>
+                        </a>
+                    </svelte:fragment>
+                </DataTable>
             </svelte:fragment>
         </PageContent>
     </div>

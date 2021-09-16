@@ -3,7 +3,6 @@
     import DataTableCell from "./DataTableCell.svelte";
     import FaIcon from '../fontawesome5/Icon.svelte'
     import DataTableHeader from "./DataTableHeader.svelte";
-    import {MessageType} from 'boost-web'
     import DataTableCommand from "./DataTableCommand.svelte";
     import DataTablePagination from "./DataTablePagination.svelte";
 

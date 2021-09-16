@@ -11,11 +11,13 @@
     let data
     let error
 
-    async function fetchData(opts) {
+    async function fetchData(_opts) {
+        let opts = {..._opts}
         try {
-            data = await _http.read(opts.url, opts.method || 'get', opts.body, opts)
+            data = await _http.read(opts.url, opts.method || (opts.body == null ? 'get' : 'post'), opts.body, opts)
             error = null
         } catch (e) {
+            console.error('Http data error', e)
             error = e
             _apiError.handle(e, opts.errorHandler || (_ => {}))
         }

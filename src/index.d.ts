@@ -81,6 +81,7 @@ export type CrudProps = CrudOptionsFrom & {
     pageParams?: any
     createAdapter?: (_: any) => any
     updateAdapter?: (_: any) => any
+    detailAdapter?: (_: any) => any
 }
 
 export class BS5Crud extends SvelteComponentTyped<CrudProps, {}> {}
@@ -102,7 +103,7 @@ export interface KeyValProps {
     unit?: string
 }
 
-export class KeyVal extends SvelteComponentTyped<{}, {}> {}
+export class KeyVal extends SvelteComponentTyped<KeyValProps, {}> {}
 
 export interface FileUploaderProps {
     multiple?: boolean
@@ -126,3 +127,4 @@ export interface HttpDataProps {
 }
 
 export class HttpData extends SvelteComponentTyped<HttpDataProps, {}> {}
+export class BS5PageContent extends SvelteComponentTyped<{}, {}> {}

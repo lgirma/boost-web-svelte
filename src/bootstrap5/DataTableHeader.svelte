@@ -33,7 +33,7 @@
 
 <th class="header" style="{column.sortable ? 'cursor: pointer' : ''}"
     on:click={onClick} class:fw-bold={!!sort} class:bg-light={sort == null}>
-    {column.header}
+    {column.header == null ? '' : column.header}
     {#if column.sortable}
         <span class="float-end text-muted" style="opacity: 0.5;">
             {#if sort == null}

@@ -1,6 +1,7 @@
 <script>
-    import {Input, Label, FormGroup, FormText} from 'sveltestrap'
+    import {Input, Label, FormGroup, FormText, Row, Col} from 'sveltestrap'
     import {Rating} from '..'
+    import AgeInput from './AgeInput.svelte'
     import AutoComplete from './AutoComplete.svelte'
     import StaticValue from './StaticValue.svelte'
 
@@ -112,6 +113,24 @@
                step={config.step || undefined}
                multiple={config.multiple || undefined}
                hidden={config.hidden} class={className}
+        />
+    {:else if config.type === 'age'}
+        <AgeInput bind:value
+            inputProps={{
+                id: config.id,
+                invalid: validationResult.hasError,
+                feedback: _i18n._(validationResult.message),
+                required: config.required,
+                name: config.name || undefined,
+                placeholder: try_i18nText(config, 'placeholder') || undefined,
+                maxlength: config.maxlength || undefined,
+                max: config.max || undefined,
+                min: config.min || undefined,
+                pattern: config.pattern || undefined,
+                step: config.step || undefined,
+                hidden: config.hidden,
+                class: className
+              }}
         />
     {:else if config.type === 'autocomplete'}
         <AutoComplete bind:value

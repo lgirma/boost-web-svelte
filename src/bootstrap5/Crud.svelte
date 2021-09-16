@@ -34,6 +34,7 @@
 
     export let createAdapter = _ => _
     export let updateAdapter = _ => _
+    export let detailAdapter = _ => _
 
     export let skipDefaultDetail = false
 
@@ -60,7 +61,7 @@
         } else if (forPage === pages.EDIT) {
             updatedObj = await _http.get(_config.detailUrl(pageParams))
         } else if (forPage === pages.DETAIL) {
-            detailObj = await _http.get(_config.detailUrl(pageParams))
+            detailObj = detailAdapter(await _http.get(_config.detailUrl(pageParams)))
         } else {
             filterObj = {
                 ..._dataTable.getDefaultFilter(),

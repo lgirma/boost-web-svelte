@@ -18,10 +18,11 @@
         document.getElementById('$$form-modal').submit()
     }
 
-    function onSubmit() {
+    function onSubmit(e) {
         if ($ModalFormStore.onAccept)
             $ModalFormStore.onAccept($ModalFormStore.forObj)
         toggle()
+        e.detail.preventDefault()
     }
 </script>
 

@@ -14,7 +14,7 @@
     <slot name="empty">-</slot>
 {:else}
     {#if type === 'tel' && !_str.isEmpty(value)}
-        <a href="tel:{value}">{value}</a> <a href="sms:{value}"><FaIcon key="sms" /></a>
+        {value} <a href="tel:{value}" title={_i18n._('CALL')}><FaIcon key="phone-volume" /></a> <a href="sms:{value}"><FaIcon key="sms" /></a>
     {:else if type === 'checkbox'}
         {value ? _i18n._('YES') : _i18n._('NO')}
     {:else if type === 'rating'}

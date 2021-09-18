@@ -74,7 +74,9 @@
                hidden={config.hidden}
                name={config.name || undefined} class={className} />
     {:else if config.type === 'radio'}
-        {#each config.choices as choice}
+        <Row>
+        {#each config.choices as choice, i}
+            <Col sm="6" md="3">
             {#if config.multiple}
                 <Input
                        on:change={e => onToggleMultiSelect(e, choice.key)}
@@ -93,7 +95,9 @@
                        hidden={config.hidden}
                        name={config.name || undefined} class={className} />
             {/if}
+            </Col>
         {/each}
+        </Row>
     {:else if config.type === 'rating'}
         <div>
             <Rating max={config.max || 5} bind:value />

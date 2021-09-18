@@ -3,7 +3,7 @@
     import Form from './Form.svelte'
     import {fly} from 'svelte/transition'
     import {Button, Breadcrumb, BreadcrumbItem, Card, CardHeader, CardTitle, CardBody} from 'sveltestrap'
-    import {deepMerge} from 'boost-web'
+    import {deepMerge, ConstDataSource} from 'boost-web'
     import PageContent from './PageContent.svelte'
     import FaIcon from '../fontawesome5/Icon.svelte'
 
@@ -13,6 +13,7 @@
     const _dataTable = globalThis.c('data-table')
     const _crud = globalThis.c('crud')
     const _toast = globalThis.c('toast')
+    const _modalForm = globalThis.c('modal-form')
     const _msgBox = globalThis.c('message-box')
 
     export let id
@@ -31,6 +32,9 @@
     export let namePlural = null
     export let page = 'list'
     export let pageParams = null
+
+    export let colWidthsMobile = undefined
+    export let colWidthsDesktop = undefined
 
     export let createAdapter = _ => _
     export let updateAdapter = _ => _
@@ -145,6 +149,24 @@
 
     async function exportToExcel() {
         try {
+            let exportOptions = {skipColumns: ['publicId'], format: 'Excel'}
+            const exportOptionsForm = {
+                fieldsConfig: {
+                    format: {type: 'select', choices: ['Excel', 'CSV']}  ,
+                    skipColumns: {
+                        type: 'autocomplete',
+                        customOptions: {
+                            dataSourceFactory: searchKey =>
+                                new ConstDataSource(_config.metadata?.exportColumnList
+                                    .filter(c => c.toUpperCase().indexOf(searchKey.toUpperCase()) > -1)
+                                    .filter((_, i) => i < 10)),
+                        }
+                    }
+                }
+            }
+            exportOptions = await _modalForm.showAsync(exportOptions, exportOptionsForm)
+            if (exportOptions == null)
+                return
             const res = await _http.request("post", _config.exportUrl, {...filterObj, format: 'excel'})
             const contentDisp = res.headers.get("Content-Disposition")
             if (contentDisp == null) {
@@ -188,7 +210,7 @@
 
 {#if currentPage === pages.LIST}
     <div in:fly={{x: 100}}>
-        <PageContent>
+        <PageContent {colWidthsDesktop} {colWidthsMobile}>
             <svelte:fragment slot="title">
                 <h4>{_config.namePlural}</h4>
             </svelte:fragment>

@@ -13,7 +13,7 @@ export default {
   LIST: 'ዝርዝር',
   NEW: 'አዲስ',
   EDIT: 'ማስተካከያ',
-  FILTER: 'ማጣርያ',
+  FILTER: 'መፈለጊያ',
   CREATE: 'አስገባ',
   UPDATE: 'አስገባ',
   SUBMIT: 'አስገባ',

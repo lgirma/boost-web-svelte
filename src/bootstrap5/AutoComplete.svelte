@@ -8,6 +8,7 @@
         Badge
     } from 'sveltestrap';
     import FaIcon from '../fontawesome5/Icon.svelte'
+    import {onMount} from 'svelte'
 
     const _str = globalThis.c('string-utils')
     const _i18n = globalThis.c('i18n')
@@ -32,7 +33,7 @@
 
     let isOpen = false
     let searchKey = ''
-    let selectedItem = null
+    let selectedItems = []
     let error = null
 
     let list = []
@@ -52,17 +53,33 @@
     }
 
     function onSelect(i) {
-        selectedItem = i
-        value = valueAdapter(i)
+        if (multiple) {
+            selectedItems = [...selectedItems, i]
+            value = selectedItems.map(valueAdapter)
+        }
+        else {
+            selectedItems = [i]
+            value = valueAdapter(i)
+        }
         searchKey = ''
     }
 
-    function onRemove() {
-        selectedItem = null
-        value = null
+    function onRemove(i) {
+        if (multiple) {
+            selectedItems = selectedItems.filter(itm => itm !== i)
+            value = selectedItems.map(valueAdapter)
+        }
+        else {
+            selectedItems = []
+            value = null
+        }
     }
 
     $: fetchList(searchKey)
+
+    onMount(() => {
+
+    })
 </script>
 
 <Dropdown {isOpen} toggle={() => (isOpen = !isOpen)}>
@@ -72,7 +89,7 @@
     </DropdownToggle>
     <DropdownMenu class="w-100">
         {#each list as item}
-            <DropdownItem on:click={_ => onSelect(item)}>
+            <DropdownItem on:click={_ => onSelect(item)} disabled={selectedItems.indexOf(item) > -1}>
                 {#if listItemTemplate}
                     {#if htmlTemplates}
                         {@html listItemTemplate(item)}
@@ -82,12 +99,16 @@
                 {:else}
                     <slot name="item" {item}>{item}</slot>
                 {/if}
+                {#if selectedItems.indexOf(item) > -1}
+                    <FaIcon key="check" />
+                {/if}
             </DropdownItem>
         {/each}
+        <DropdownItem disabled class="text-center"><small>{_i18n._('POSSIBLE_MORE_TYPE_TO_FIND')}</small></DropdownItem>
     </DropdownMenu>
 </Dropdown>
-{#if selectedItem != null}
-    <Badge pill>
+{#each selectedItems as selectedItem}
+    <Badge pill class="me-1">
         {#if selectedItemTemplate}
             {#if htmlTemplates}
                 {@html selectedItemTemplate(selectedItem)}
@@ -97,7 +118,7 @@
         {:else}
             <slot name="selected-item" item={selectedItem}>{selectedItem}</slot>
         {/if}
-        <FaIcon key="times-circle" style="cursor: pointer" on:click={_ => onRemove()}>&times;</FaIcon>
+        <FaIcon key="times-circle" style="cursor: pointer" on:click={_ => onRemove(selectedItem)}>&times;</FaIcon>
     </Badge>
 {:else}
     {#if error == null}
@@ -105,4 +126,4 @@
     {:else}
         <Badge pill color="white" class="text-danger">{_i18n._(error)}</Badge>
     {/if}
-{/if}
+{/each}

@@ -20,5 +20,6 @@ export default {
   EXPORT_TO_EXCEL: 'ወደ Excel ገልብጥ',
   DELETE: 'አጥፋ',
   ITEMS_SELECTED: '{0} ዝርዝሮችን መርጠዋል።',
-  DETAIL: 'መረጃ'
+  DETAIL: 'መረጃ',
+  POSSIBLE_MORE_TYPE_TO_FIND: 'ተጨማሪ ሊኖር ይችላል፤ ለማየት ይጻፉ'
 }

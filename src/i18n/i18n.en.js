@@ -20,5 +20,6 @@ export default {
   EXPORT_TO_EXCEL: 'Export to Excel',
   DELETE: 'Delete',
   ITEMS_SELECTED: '{0} item(s) selected.',
-  DETAIL: 'Detail'
+  DETAIL: 'Detail',
+  POSSIBLE_MORE_TYPE_TO_FIND: 'Possibly more. Type to find.'
 }

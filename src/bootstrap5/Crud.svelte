@@ -9,6 +9,7 @@
 
     const _i18n = globalThis.c('i18n')
     const _http = globalThis.c('http')
+    const _str = globalThis.c('string-utils')
     const _apiError = globalThis.c('api-error')
     const _dataTable = globalThis.c('data-table')
     const _crud = globalThis.c('crud')
@@ -149,17 +150,20 @@
 
     async function exportToExcel() {
         try {
-            let exportOptions = {skipColumns: ['publicId'], format: 'Excel'}
+            let exportOptions = {skipColumns: ['publicId'], format: 'excel'}
             const exportOptionsForm = {
                 fieldsConfig: {
-                    format: {type: 'select', choices: ['Excel', 'CSV']}  ,
+                    format: {type: 'select', choices: ['excel', 'csv']}  ,
                     skipColumns: {
                         type: 'autocomplete',
                         customOptions: {
+                            multiple: true,
                             dataSourceFactory: searchKey =>
                                 new ConstDataSource(_config.metadata?.exportColumnList
                                     .filter(c => c.toUpperCase().indexOf(searchKey.toUpperCase()) > -1)
                                     .filter((_, i) => i < 10)),
+                            listItemTemplate: i => _str.humanize(i),
+                            selectedItemTemplate: i => _str.humanize(i)
                         }
                     }
                 }
@@ -167,7 +171,7 @@
             exportOptions = await _modalForm.showAsync(exportOptions, exportOptionsForm)
             if (exportOptions == null)
                 return
-            const res = await _http.request("post", _config.exportUrl, {...filterObj, format: 'excel'})
+            const res = await _http.request("post", _config.exportUrl, {filter: filterObj, ...exportOptions})
             const contentDisp = res.headers.get("Content-Disposition")
             if (contentDisp == null) {
                 _msgBox.showError("Empty content disposition")

@@ -128,3 +128,5 @@ export interface HttpDataProps {
 
 export class HttpData extends SvelteComponentTyped<HttpDataProps, {}> {}
 export class BS5PageContent extends SvelteComponentTyped<{}, {}> {}
+
+export class BS5Login extends SvelteComponentTyped<{}, {}> {}
